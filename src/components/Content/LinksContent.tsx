@@ -26,9 +26,8 @@ const itemVariants = {
 
 // Data Kontak dan Sosial (Menggunakan path image)
 const socialLinks = [
-    { name: "LinkedIn", icon: "/icons/linkedin.svg", url: "https://linkedin.com/in/renaldodasilva", color: "bg-white" },
-    { name: "Dribbble", icon: "/icons/dribbble.svg", url: "https://dribbble.com/renaldodasilva", color: "bg-pink-500" },
-    { name: "X (Twitter)", icon: "/icons/x.svg", url: "https://x.com/renaldodasilva", color: "bg-black" },
+    { name: "Upwork", icon: "/icons/upwork.svg", url: "https://www.upwork.com/freelancers/~010c1403e9a9b67f91", color: "bg-white" },
+    { name: "LinkedIn", icon: "/icons/linkedin.png", url: "https://linkedin.com/in/renaldosemmadasilva", color: "bg-black" },
 ];
 
 
