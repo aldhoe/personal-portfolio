@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ======================================= */
+/* CUSTOM SCROLLBAR RULES */
+/* ======================================= */
+
+/* 1. SCROLLBAR-HIDE (Untuk horizontal scroll portfolio cards) */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+}
+
+/* 2. ANIMATED SCROLLBAR (scroll-hidden & scroll-visible) */
+/* Base Styling Scrollbar */
+.scroll-hidden::-webkit-scrollbar,
+.scroll-visible::-webkit-scrollbar {
+  width: 8px; /* Lebar scrollbar vertikal */
+  height: 8px; /* Lebar scrollbar horizontal */
+}
+
+/* Track (Area di belakang thumb) */
+.scroll-hidden::-webkit-scrollbar-track,
+.scroll-visible::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+/* Thumb (Indikator yang bergerak) */
+.scroll-hidden::-webkit-scrollbar-thumb,
+.scroll-visible::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.4); /* Warna thumb */
+  border-radius: 10px;
+  transition: opacity 0.5s ease-out; /* Transisi untuk fade in/out */
+}
+
+/* Default State (scroll-hidden): Sembunyikan thumb */
+.scroll-hidden::-webkit-scrollbar-thumb {
+  opacity: 0 !important;
+}
+
+/* Active State (scroll-visible): Tampilkan thumb saat scrolling aktif */
+.scroll-visible::-webkit-scrollbar-thumb {
+  opacity: 0.8 !important;
+  transition: opacity 0.1s ease-in; /* Cepat muncul */
+}
+
+/* Hover state untuk thumb */
+.scroll-visible::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.6); /* Lebih terang saat hover */
+}
+
+/* Fallback Firefox untuk animated scrollbar */
+.scroll-hidden {
+  scrollbar-color: transparent transparent; 
+  scrollbar-width: thin;
+}
+
+.scroll-visible {
+  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+  scrollbar-width: thin;
+}
