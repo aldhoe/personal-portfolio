@@ -10,23 +10,18 @@ import { motion } from 'framer-motion';
 
 // Asumsi: Anda memiliki komponen SVG atau gambar di folder assets/icons/
 // Untuk contoh ini, saya akan menggunakan placeholder atau Anda bisa menggantinya.
-const FramerIcon = () => 
-  <img src="/icons/framer.svg" alt="Framer" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
-const FigmaIcon = () => 
-  <img src="/icons/figma.svg" alt="Figma" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
+const NanoBananaIcon = () => 
+  <img src="/icons/nanobanana.png" alt="Nano Banana" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
+const PremiereIcon = () => 
+  <img src="/icons/premiere.png" alt="Premiere" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
 const PhotoshopIcon = () => 
-  <img src="/icons/photoshop.svg" alt="Photoshop" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
-const IllustratorIcon = () => 
-  <img src="/icons/illustrator.svg" alt="Illustrator" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
-const SketchIcon = () => 
-  <img src="/icons/sketch.svg" alt="Sketch" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
+  <img src="/icons/photoshop.png" alt="Photoshop" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
+const CapcutIcon = () => 
+  <img src="/icons/capcut.png" alt="Capcut" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
+const CanvaIcon = () => 
+  <img src="/icons/canva.png" alt="Canva" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
 const MidjourneyIcon = () => 
-  <img src="/icons/midjourney.svg" alt="Midjourney" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
-const SplineIcon = () => 
-  <img src="/icons/spline.svg" alt="Spline" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
-const BlenderIcon = () => 
-  <img src="/icons/blender.svg" alt="Blender" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
-
+  <img src="/icons/midjourney.png" alt="Midjourney" className="w-12 h-12 md:w-16 md:h-16 object-contain" />;
 
 const contentVariants = {
   hidden: { opacity: 0, y: 10 },
@@ -189,36 +184,28 @@ const ExperienceContent: React.FC = () => {
                 <h3 className="text-xl font-bold text-yellow-500 mb-6">Tools</h3>
                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-8 gap-x-4">
                     <motion.div variants={toolIconVariants} className="flex flex-col items-center justify-center text-center">
-                        <FramerIcon />
-                        <span className="text-sm font-bold text-white mt-2">Framer</span>
+                        <NanoBananaIcon />
+                        <span className="text-sm font-bold text-white mt-2">Nano Banana</span>
                     </motion.div>
                     <motion.div variants={toolIconVariants} className="flex flex-col items-center justify-center text-center">
-                        <FigmaIcon />
-                        <span className="text-sm font-bold text-white mt-2">Figma</span>
+                        <PremiereIcon />
+                        <span className="text-sm font-bold text-white mt-2">Premiere</span>
                     </motion.div>
                     <motion.div variants={toolIconVariants} className="flex flex-col items-center justify-center text-center">
                         <PhotoshopIcon />
                         <span className="text-sm font-bold text-white mt-2">Photoshop</span>
                     </motion.div>
                     <motion.div variants={toolIconVariants} className="flex flex-col items-center justify-center text-center">
-                        <IllustratorIcon />
-                        <span className="text-sm font-bold text-white mt-2">Illustrator</span>
+                        <CapcutIcon />
+                        <span className="text-sm font-bold text-white mt-2">Capcut</span>
                     </motion.div>
                     <motion.div variants={toolIconVariants} className="flex flex-col items-center justify-center text-center">
-                        <SketchIcon />
-                        <span className="text-sm font-bold text-white mt-2">Sketch</span>
+                        <CanvaIcon />
+                        <span className="text-sm font-bold text-white mt-2">Canva</span>
                     </motion.div>
                     <motion.div variants={toolIconVariants} className="flex flex-col items-center justify-center text-center">
                         <MidjourneyIcon />
                         <span className="text-sm font-bold text-white mt-2">Midjourney</span>
-                    </motion.div>
-                    <motion.div variants={toolIconVariants} className="flex flex-col items-center justify-center text-center">
-                        <SplineIcon />
-                        <span className="text-sm font-bold text-white mt-2">Spline</span>
-                    </motion.div>
-                    <motion.div variants={toolIconVariants} className="flex flex-col items-center justify-center text-center">
-                        <BlenderIcon />
-                        <span className="text-sm font-bold text-white mt-2">Blender</span>
                     </motion.div>
                 </div>
             </motion.div>

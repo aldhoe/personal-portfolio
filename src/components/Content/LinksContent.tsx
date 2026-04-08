@@ -104,7 +104,7 @@ const LinksContent: React.FC = () => {
                     className="flex items-center space-x-3 text-lg font-semibold text-gray-200 hover:text-yellow-400 transition-colors"
                 >
                     <Phone className="w-5 h-5 text-yellow-400" />
-                    <span>+628 13655 80283</span>
+                    <span>+62 813 6558 0283</span>
                 </a>
 
             </motion.div>

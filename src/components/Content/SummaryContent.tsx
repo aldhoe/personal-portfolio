@@ -46,7 +46,7 @@ export const SummaryContent: React.FC = () => {
         <div className="md:col-span-2 text-gray-200 space-y-6 text-base md:text-lg leading-relaxed">
           
           <motion.p variants={itemVariants}>
-            I am a **Creative Designer** and **AI Visual Specialist** dedicated to transforming complex ideas into elegant, user-centric digital experiences. My design philosophy is rooted in empathy, clarity, and continuous learning, allowing me to adapt quickly to new trends and deliver impactful results for any project.
+            I am a Creative Designer and AI Visual Specialist dedicated to transforming complex ideas into elegant, user-centric digital experiences. My design philosophy is rooted in empathy, clarity, and continuous learning, allowing me to adapt quickly to new trends and deliver impactful results for any project.
           </motion.p>
 
           <motion.p variants={itemVariants}>
@@ -58,7 +58,7 @@ export const SummaryContent: React.FC = () => {
             className="border-l-4 border-yellow-400 pl-4 md:pl-6 pt-2"
           >
             <p className="text-xl md:text-2xl font-extrabold text-white">
-              Driven by a curiosity to learn and improve, I continuously explore new tools and methodologies to enhance my work. Whether working on web applications, mobile interfaces, or design systems, I am committed to delivering high-quality results that make a difference for users and businesses alike.
+              Driven by a curiosity to learn and improve, I continuously explore new tools and methodologies to enhance my work. 
             </p>
           </motion.div>
           
