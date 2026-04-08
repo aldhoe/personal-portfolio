@@ -66,7 +66,7 @@ const HeroSection: React.FC = () => {
         className="grid grid-cols-1 gap-y-4 md:gap-y-6 sm:grid-cols-2 sm:gap-x-6 md:gap-x-34 md:gap-y-8"
       >
         <IconLink Icon={Mail} text="renaldosemma@gmail.com" href="mailto:renaldosemma@gmail.com" className="md:text-base" />
-        <IconLink Icon={Phone} text="+62 813 6558 0283" href="tel:+6281365580283" className="md:text-base" />
+        <IconLink Icon={Phone} text="+62 8136558 0283" href="tel:+6281365580283" className="md:text-base" />
         <IconLink Icon={Linkedin} text="Renaldo Semma Dasilva" href="https://linkedin.com/in/renaldosemmadasilva" target="_blank" className="md:text-base" />
         <IconLink Icon={MapPin} text="Kundur, Indonesia" href="#" className="md:text-base" />
       </motion.div>
