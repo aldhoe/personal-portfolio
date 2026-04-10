@@ -4,8 +4,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 
-// ... (Interface ProjectDetail dan ProjectDetailProps tetap sama) ...
-
 interface ProjectDetail {
   title: string;
   subtitle: string;
@@ -20,7 +18,6 @@ interface ProjectDetailProps {
   onClose: () => void;
 }
 
-// Varian untuk slide-in/out halaman (dipertahankan)
 const pageTransitionVariants = {
   hidden: { opacity: 0, x: 20 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } }, 
@@ -30,15 +27,12 @@ const pageTransitionVariants = {
 const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
   
   return (
-    // Wrapper Full-Screen Konten (Scrollable Area)
     <motion.div
         variants={pageTransitionVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
-        // Wrapper: Batasi lebar, aktifkan scrollbar-hide
         className="w-full h-full max-w-5xl mx-auto px-4 md:px-0 overflow-y-auto scrollbar-hide"
-        // Padding Top/Bottom
         style={{ paddingTop: '1.5rem', paddingBottom: '8rem' }} 
     >
         {/* Tombol Back */}
@@ -50,12 +44,12 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) =
             Back to Project List
         </button>
         
-        {/* KUNCI PERBAIKAN: Gambar Proyek (Menghilangkan aspect-ratio) */}
+        {/* Gambar Proyek */}
         <div className="rounded-xl overflow-hidden mb-8 shadow-2xl max-w-xl">
             <img 
                 src={project.imageUrl} 
                 alt={project.title} 
-                className="w-full h-auto object-cover" // Menggunakan h-auto untuk mempertahankan rasio
+                className="w-full h-auto object-cover"
             />
         </div>
         
@@ -73,25 +67,28 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) =
             </div>
 
 
-            {/* About The Project */}
+            {/* About The Project - FIXED untuk support line breaks */}
             <div>
                 <h4 className="text-xl font-bold text-yellow-400 mb-4 uppercase tracking-wider">
                     About The Project
                 </h4>
-                <p className="text-gray-300 leading-relaxed text-base">
+                <p className="text-gray-300 leading-relaxed text-base whitespace-pre-line">
                     {project.description}
                 </p>
             </div>
             
             {/* Live Project Link */}
-            <a 
-                href={project.liveLink} 
-                target="_blank" 
-                className="inline-flex items-center text-white font-bold hover:text-yellow-300 transition-colors text-base"
-            >
-                Live Project 
-                <ExternalLink className="w-5 h-5 ml-2" />
-            </a>
+            {project.liveLink && (
+                <a 
+                    href={project.liveLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-white font-bold hover:text-yellow-300 transition-colors text-base"
+                >
+                    Live Project 
+                    <ExternalLink className="w-5 h-5 ml-2" />
+                </a>
+            )}
             
         </div>
     </motion.div>
