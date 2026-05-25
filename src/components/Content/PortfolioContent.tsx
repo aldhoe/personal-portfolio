@@ -1,37 +1,30 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { CornerRightUp, ChevronLeft, ChevronRight } from 'lucide-react';
-import { client } from '@/lib/sanity';
-
-interface ProjectData {
-    title: string;
-    description: string;
-    subtitle: string;
-    achievements: string;
-    imageUrl: string;
-    liveLink: string;
-    type: string;
-}
+import { CornerRightUp, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { ProjectData, PortfolioCategory } from '@/types/sanity';
 
 interface PortfolioContentProps {
     onCardClick: (project: ProjectData) => void;
+    data: PortfolioCategory[];
+    loading: boolean;
+    error: string | null;
 }
 
-// KUNCI: Single parent container variant
+// Parent container variant
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { 
     opacity: 1,
     transition: { 
       when: "beforeChildren",
-      staggerChildren: 0.12, // Jarak antar elemen (natural flow)
+      staggerChildren: 0.12,
     } 
   },
 };
 
-// Item muncul dari bawah dengan smooth
+// Item muncul dari bawah
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
@@ -44,46 +37,16 @@ const itemVariants = {
   }, 
 };
 
-const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
-  const [portfolioData, setPortfolioData] = useState<{ category: string; items: ProjectData[] }[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, loading, error }) => {
   const scrollContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [scrollStates, setScrollStates] = useState<{ canScrollLeft: boolean; canScrollRight: boolean }[]>([]);
 
+  // Initialize scroll states when data changes
   useEffect(() => {
-    const fetchPortfolioData = async () => {
-      try {
-        const query = `*[_type == "portfolioCategory"] | order(order asc) {
-          category,
-          "items": items[]-> {
-            title,
-            description,
-            subtitle,
-            achievements,
-            "imageUrl": imageUrl.asset->url,
-            liveLink,
-            type
-          }
-        }`;
-        
-        const [data] = await Promise.all([
-          client.fetch(query),
-          new Promise(resolve => setTimeout(resolve, 500)) // Min 500ms delay
-        ]);
-        
-        setPortfolioData(data);
-        setScrollStates(data.map(() => ({ canScrollLeft: false, canScrollRight: true })));
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching portfolio data:', err);
-        setError('Failed to load portfolio data');
-        setLoading(false);
-      }
-    };
-
-    fetchPortfolioData();
-  }, []);
+    if (data.length > 0) {
+      setScrollStates(data.map(() => ({ canScrollLeft: false, canScrollRight: true })));
+    }
+  }, [data]);
 
   const checkScrollability = (index: number) => {
     const container = scrollContainerRefs.current[index];
@@ -110,7 +73,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
     containers.forEach((container, index) => {
       if (container) {
         container.addEventListener('scroll', handleScroll(index));
-        checkScrollability(index); // Initial check
+        checkScrollability(index);
       }
     });
 
@@ -124,7 +87,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
       });
       window.removeEventListener('resize', handleResize);
     };
-  }, [portfolioData]);
+  }, [data]);
 
   const scroll = (index: number, direction: 'left' | 'right') => {
     const container = scrollContainerRefs.current[index];
@@ -143,7 +106,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-[400px] w-full">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-yellow-400/20 border-t-yellow-400 rounded-full animate-spin"></div>
           <p className="text-sm text-gray-500 font-light tracking-wide">Loading</p>
@@ -154,7 +117,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
 
   if (error) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-[400px] w-full">
         <div className="text-center">
           <p className="text-red-400 text-sm mb-1">Failed to load</p>
           <p className="text-gray-600 text-xs">Please try again</p>
@@ -163,9 +126,9 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
     );
   }
 
-  if (portfolioData.length === 0) {
+  if (data.length === 0) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-[400px] w-full">
         <p className="text-gray-600 text-sm">No projects found</p>
       </div>
     );
@@ -178,7 +141,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
       initial="hidden"
       animate="visible"
     >
-      {/* Judul Utama (Item 1) */}
+      {/* Judul Utama */}
       <motion.div 
         variants={itemVariants} 
         className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mb-12"
@@ -197,12 +160,12 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
         </div>
       </motion.div>
 
-      {/* Kategori & Cards (Items 2, 3, 4...) */}
+      {/* Kategori & Cards */}
       <div className="space-y-16 mt-12">
-        {portfolioData.map((category, categoryIndex) => (
+        {data.map((category, categoryIndex) => (
           <motion.div 
             key={categoryIndex}
-            variants={itemVariants} // Setiap kategori = 1 item dalam stagger
+            variants={itemVariants}
           >
             {/* Category Title */}
             <h3 className="text-2xl font-bold text-white tracking-wider mb-6 ml-1 uppercase">
@@ -211,7 +174,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
 
             {/* Scroll Horizontal Cards */}
             <div className="relative group/scroll">
-              {/* Left Arrow - Only show if more than 3 items and can scroll left */}
+              {/* Left Arrow */}
               {category.items.length > 3 && scrollStates[categoryIndex]?.canScrollLeft && (
                 <button
                   onClick={() => scroll(categoryIndex, 'left')}
@@ -228,7 +191,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
                 </button>
               )}
 
-              {/* Right Arrow - Only show if more than 3 items and can scroll right */}
+              {/* Right Arrow */}
               {category.items.length > 3 && scrollStates[categoryIndex]?.canScrollRight && (
                 <button
                   onClick={() => scroll(categoryIndex, 'right')}
@@ -246,7 +209,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
               )}
 
               <div 
-                ref={(el) => scrollContainerRefs.current[categoryIndex] = el}
+                ref={(el) => { scrollContainerRefs.current[categoryIndex] = el; }}
                 className="flex overflow-x-auto space-x-6 pb-4 pt-1 snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0"
               >
                 {category.items.map((item, itemIndex) => (
@@ -258,18 +221,19 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
                     viewport={{ once: true, amount: 0.01, margin: "0px 100px 0px 0px" }}
                     transition={{ 
                       duration: 0.4, 
-                      delay: itemIndex * 0.1, // Stagger untuk cards dalam 1 kategori
+                      delay: itemIndex * 0.1,
                       ease: "easeOut" 
                     }}
                     className="group relative flex-shrink-0 snap-center rounded-2xl overflow-hidden shadow-xl 
                              bg-neutral-900/80 hover:bg-neutral-800/90 transition duration-300
-                             w-[75vw] max-w-[280px] md:w-72 h-[320px] cursor-pointer" 
+                             w-[70vw] max-w-[280px] sm:w-64 md:w-72 h-[320px] cursor-pointer" 
                   >
                     <div className="relative w-full h-full">
                       <img 
                         src={item.imageUrl || '/mockups/placeholder.png'} 
                         alt={item.title} 
-                        onError={(e) => e.currentTarget.src = '/mockups/placeholder.png'}
+                        loading="lazy"
+                        onError={(e) => { e.currentTarget.src = '/mockups/placeholder.png'; }}
                         className="w-full h-full object-cover transition-transform duration-500 scale-110 group-hover:scale-100" 
                       />
                       
@@ -283,6 +247,14 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick }) => {
                         <h4 className="text-2xl font-extrabold">
                           {item.title}
                         </h4>
+                        
+                        {/* Video indicator */}
+                        {item.videoUrl && (
+                          <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm rounded-full px-2.5 py-1">
+                            <Play className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                            <span className="text-xs text-white/80 font-medium">Video</span>
+                          </div>
+                        )}
                         
                         <CornerRightUp className="absolute top-4 right-4 w-6 h-6 text-white/50 group-hover:text-yellow-400 transition-colors duration-300" />
                       </div>

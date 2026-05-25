@@ -11,9 +11,6 @@ interface NavigationMenuProps {
 const NavigationMenu: React.FC<NavigationMenuProps> = ({ activeTab }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  // KUNCI PERBAIKAN: Tombol muncul jika Home ATAU Links aktif
-  const isVisible = activeTab === 'home' || activeTab === 'links';
-
   return (
     <AnimatePresence>
       {(activeTab === 'home' || activeTab === 'links') && (

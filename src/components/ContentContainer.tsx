@@ -2,41 +2,45 @@
 
 import React, { useRef, useState, useEffect } from 'react'; 
 import { AnimatePresence, motion } from 'framer-motion';
+import Image from 'next/image';
 import HeroSection from './Home/HeroSection'; 
 import { SummaryContent } from './Content/SummaryContent'; 
 import ExperienceContent from './Content/ExperienceContent'; 
 import PortfolioContent from './Content/PortfolioContent'; 
 import ProjectDetailView from './Content/ProjectDetailView';
 import LinksContent from './Content/LinksContent'; 
-
-interface ProjectData {
-    title: string;
-    description: string;
-    subtitle: string;
-    achievements: string;
-    imageUrl: string;
-    liveLink: string;
-    type: string;
-}
+import { 
+  ProjectData, 
+  PortfolioCategory, 
+  SiteSettings, 
+  ExperienceData, 
+  TestimonialData 
+} from '@/types/sanity';
 
 interface ContentContainerProps {
   activeTab: string;
   selectedProject: ProjectData | null;
   onProjectSelect: (project: ProjectData) => void;
   onProjectClose: () => void;
+  portfolioData: PortfolioCategory[];
+  portfolioLoading: boolean;
+  portfolioError: string | null;
+  siteSettings?: SiteSettings | null;
+  experiences?: ExperienceData[];
+  testimonials?: TestimonialData[];
 }
-
-const transitionVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.01 } }, 
-  exit: { opacity: 0, transition: { duration: 0 } }, 
-};
 
 const ContentContainer: React.FC<ContentContainerProps> = ({ 
   activeTab, 
   selectedProject, 
   onProjectSelect, 
-  onProjectClose 
+  onProjectClose,
+  portfolioData,
+  portfolioLoading,
+  portfolioError,
+  siteSettings,
+  experiences,
+  testimonials,
 }) => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -54,23 +58,16 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       setIsScrolling(false);
     }, 500);
 
-    // Deteksi posisi scroll untuk fade gradient
     const element = scrollRef.current;
     if (element) {
       const { scrollTop, scrollHeight, clientHeight } = element;
-      
-      // Show top fade kalo udah scroll ke bawah
       setShowTopFade(scrollTop > 50);
-      
-      // Show bottom fade kalo belum sampe paling bawah
       setShowBottomFade(scrollTop + clientHeight < scrollHeight - 50);
     }
   };
   
   useEffect(() => {
-    // Check initial scroll position
     handleScroll();
-    
     return () => {
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
@@ -78,10 +75,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
     };
   }, [activeTab]);
 
-  // Wrapper untuk konten scrollable dengan dynamic gradient masks
   const scrollableContentWrapper = (content: React.ReactNode) => (
     <div className="relative w-full max-w-5xl mx-auto px-4 md:px-0 h-full">
-      {/* Scrollable Content with CSS Mask */}
       <div 
         ref={scrollRef}
         onScroll={handleScroll}
@@ -106,7 +101,6 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
     </div>
   );
 
-  // Wrapper untuk konten non-scrollable (tanpa mask)
   const commonContentWrapper = (content: React.ReactNode) => (
     <div 
       className="w-full max-w-5xl mx-auto px-4 md:px-0 max-h-screen overflow-y-auto scrollbar-hide"
@@ -116,52 +110,104 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
     </div>
   );
 
-  const renderContent = () => {
-    if (selectedProject) {
-      return <ProjectDetailView project={selectedProject} onClose={onProjectClose} />;
-    }
-
+  const renderTabContent = () => {
     switch (activeTab) {
       case 'home':
-        return <HeroSection />;
-        
+        return (
+          <HeroSection 
+            name={siteSettings?.name}
+            jobTitle={siteSettings?.jobTitle}
+            isOpenToWork={siteSettings?.isOpenToWork}
+            contactInfo={siteSettings?.contactInfo}
+          />
+        );
       case 'summary':
-        return commonContentWrapper(<SummaryContent />);
-        
+        return commonContentWrapper(
+          <SummaryContent 
+            paragraphs={siteSettings?.summaryParagraphs}
+            quote={siteSettings?.summaryQuote}
+          />
+        );
       case 'experience':
-        return scrollableContentWrapper(<ExperienceContent />);
-        
+        return scrollableContentWrapper(
+          <ExperienceContent 
+            experiences={experiences}
+            skills={siteSettings?.skills}
+            tools={siteSettings?.tools}
+            testimonials={testimonials}
+          />
+        );
       case 'portfolio':
-        return scrollableContentWrapper(<PortfolioContent onCardClick={onProjectSelect} />);
-        
+        return scrollableContentWrapper(
+          <PortfolioContent 
+            onCardClick={onProjectSelect}
+            data={portfolioData}
+            loading={portfolioLoading}
+            error={portfolioError}
+          />
+        );
       case 'links':
-        return commonContentWrapper(<LinksContent />);
-        
+        return commonContentWrapper(
+          <LinksContent 
+            socialLinks={siteSettings?.socialLinks}
+            contactInfo={siteSettings?.contactInfo}
+          />
+        );
       default:
-        return <HeroSection />;
+        return (
+          <HeroSection 
+            name={siteSettings?.name}
+            jobTitle={siteSettings?.jobTitle}
+            isOpenToWork={siteSettings?.isOpenToWork}
+            contactInfo={siteSettings?.contactInfo}
+          />
+        );
     }
   };
 
   const showPageOverlay = activeTab !== 'home' && activeTab !== 'links';
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={selectedProject ? 'detail-view' : activeTab} 
-        variants={transitionVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        className={`w-full h-full z-10 
-          ${showPageOverlay 
-            ? 'absolute inset-0 flex items-start justify-center pt-20 bg-neutral-900/20 backdrop-blur-xl'
-            : 'flex items-center justify-start h-full'
+    <>
+      {/* 
+        STABLE OVERLAY LAYER — This div provides the blur/bg overlay.
+        It does NOT get unmounted during detail→portfolio transitions.
+        This fixes the blur flickering issue.
+      */}
+      <AnimatePresence>
+        {showPageOverlay && (
+          <motion.div
+            key="page-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 z-5 bg-neutral-900/20 backdrop-blur-xl pointer-events-none"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* CONTENT LAYER — Transitions between tabs and detail view */}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={selectedProject ? 'detail-view' : activeTab} 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.15 } }}
+          exit={{ opacity: 0, transition: { duration: 0.1 } }}
+          className={`w-full h-full z-10 
+            ${showPageOverlay || selectedProject
+              ? 'absolute inset-0 flex items-start justify-center pt-20'
+              : 'flex items-center justify-start h-full'
+            }
+          `}
+        >
+          {selectedProject 
+            ? <ProjectDetailView project={selectedProject} onClose={onProjectClose} />
+            : renderTabContent()
           }
-        `}
-      >
-        {renderContent()}
-      </motion.div>
-    </AnimatePresence>
+        </motion.div>
+      </AnimatePresence>
+    </>
   );
 };
 

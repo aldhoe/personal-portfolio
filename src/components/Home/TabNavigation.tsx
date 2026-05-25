@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Home, Briefcase, FileText, Layers, Link } from 'lucide-react'; 
-import { motion, LayoutGroup } from 'framer-motion'; // Pastikan Framer Motion di-import
+import { motion, LayoutGroup } from 'framer-motion';
 
 const navItems = [
   { id: 'home', icon: Home, label: 'Home' },
@@ -12,17 +12,19 @@ const navItems = [
   { id: 'links', icon: Link, label: 'Links' },
 ];
 
-const TabNavigation: React.FC<any> = ({ activeTab, onTabChange }) => {
+interface TabNavigationProps {
+  activeTab: string;
+  onTabChange: (tabId: string) => void;
+}
+
+const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange }) => {
   const isTabActive = (id: string) => id === activeTab; 
 
-  const radiusClass = 'rounded-[2rem]'; 
-  const menuBgClass = 'bg-neutral-800/60'; 
-
   return (
-    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-30">
+    <div className="fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-30 w-[calc(100%-2rem)] sm:w-auto max-w-lg sm:max-w-none">
       <LayoutGroup>
-        <motion.div // Menggunakan motion.div untuk LayoutGroup
-          className={`flex relative ${menuBgClass} backdrop-blur-lg p-2 ${radiusClass} shadow-2xl space-x-4 sm:space-x-2`} 
+        <motion.div
+          className="flex relative bg-neutral-800/60 backdrop-blur-lg p-1.5 sm:p-2 rounded-2xl sm:rounded-[2rem] shadow-2xl justify-between sm:justify-start sm:space-x-2" 
           initial={{ y: 50, opacity: 0 }} 
           animate={{ y: 0, opacity: 1 }} 
           transition={{ duration: 0.5, delay: 1 }} 
@@ -31,26 +33,24 @@ const TabNavigation: React.FC<any> = ({ activeTab, onTabChange }) => {
             <button
               key={item.id}
               onClick={() => onTabChange(item.id)}
-              className={`flex items-center justify-center ${radiusClass} relative z-10
+              className={`flex items-center justify-center relative z-10 transition-colors
                 
-                // STYLING NON-AKTIF (Mobile Default): Fixed Size & Rounded Full
-                p-2.5 hover:bg-white/10 w-10 h-10 rounded-full flex-shrink-0 
+                /* Mobile: icon + mini label, better touch targets */
+                flex-col gap-0.5 px-3 py-2 rounded-xl min-w-[3rem]
                 
-                // STYLING DESKTOP (Persegi Panjang): Menimpa Mobile
-                sm:w-auto sm:h-auto sm:py-2.5 sm:px-4 sm:space-x-2 sm:${radiusClass}
+                /* Desktop: horizontal layout with label */
+                sm:flex-row sm:gap-2 sm:px-4 sm:py-2.5 sm:rounded-[2rem] sm:min-w-0
                 
-                // STYLING AKTIF
                 ${isTabActive(item.id) 
                   ? '!text-neutral-800' 
-                  : 'text-gray-300' 
+                  : 'text-gray-400 hover:text-gray-200' 
                 }
               `}
             >
               
-              {/* 2. THE MOVING PILL (motion.div) - DIPERBAIKI TOTAL */}
+              {/* Moving Pill Background */}
               {isTabActive(item.id) && (
                 <motion.div
-                  // KUNCI: AKTIFKAN KEMBALI ANIMASI BERJALAN
                   layout 
                   layoutId="active-pill" 
                   transition={{ 
@@ -59,26 +59,24 @@ const TabNavigation: React.FC<any> = ({ activeTab, onTabChange }) => {
                       damping: 30, 
                       mass: 0.8 
                   }}
-                  // Styling Pill: Rounded-full di mobile, rounded-[2rem] di desktop
-                  className={`absolute inset-0 bg-white shadow-md rounded-full sm:${radiusClass} z-[-1]`}
+                  className="absolute inset-0 bg-white shadow-md rounded-xl sm:rounded-[2rem] z-[-1]"
                 />
               )}
 
-              {/* Ikon */}
+              {/* Icon */}
               <item.icon 
                   className={`
-                      w-6 h-6 transition-colors 
-                      sm:w-4 sm:h-4 
+                      w-5 h-5 sm:w-4 sm:h-4 transition-colors flex-shrink-0
                       ${isTabActive(item.id) ? '!text-neutral-800' : ''}
                   `} 
               />
               
-              {/* Label Teks */}
+              {/* Label — visible on both mobile (tiny) and desktop (normal) */}
               <span 
                   className={`
-                      hidden text-sm font-medium
-                      sm:block 
-                      ${isTabActive(item.id) ? 'sm:!text-neutral-800' : 'sm:text-gray-300'}
+                      text-[10px] font-medium leading-tight
+                      sm:text-sm
+                      ${isTabActive(item.id) ? '!text-neutral-800' : ''}
                   `}
               >
                 {item.label}

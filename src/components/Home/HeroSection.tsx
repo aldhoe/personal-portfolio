@@ -1,7 +1,17 @@
+'use client';
+
 import React from 'react';
-import { Mail, Linkedin, MapPin, Phone } from 'lucide-react'; 
+import { Mail, Linkedin, MapPin, Phone, LucideIcon } from 'lucide-react'; 
 import { motion } from 'framer-motion'; 
 import IconLink from '../ui/IconLink';
+import { ContactItem } from '@/types/sanity';
+
+interface HeroSectionProps {
+  name?: string;
+  jobTitle?: string;
+  isOpenToWork?: boolean;
+  contactInfo?: ContactItem[];
+}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -19,56 +29,99 @@ const itemVariants = {
   visible: { y: 0, opacity: 1 }, 
 };
 
-const HeroSection: React.FC = () => {
+// Map contact type to icon
+const contactIconMap: Record<string, LucideIcon> = {
+  email: Mail,
+  phone: Phone,
+  linkedin: Linkedin,
+  location: MapPin,
+};
+
+// Fallback data
+const fallbackContactInfo: ContactItem[] = [
+  { type: 'email', label: 'renaldosemma@gmail.com', url: 'mailto:renaldosemma@gmail.com' },
+  { type: 'phone', label: '+62 813 6558 0283', url: 'tel:+6281365580283' },
+  { type: 'linkedin', label: 'Renaldo Semma Dasilva', url: 'https://linkedin.com/in/renaldosemmadasilva' },
+  { type: 'location', label: 'Kundur, Indonesia', url: '#' },
+];
+
+const HeroSection: React.FC<HeroSectionProps> = ({
+  name = 'Renaldo Dasilva',
+  jobTitle = 'Designer | AI Visual',
+  isOpenToWork = true,
+  contactInfo,
+}) => {
+  const contacts = contactInfo && contactInfo.length > 0 ? contactInfo : fallbackContactInfo;
+
   return (
-    // Padding horizontal di desktop: md:px-24 dan lg:px-32
     <motion.div 
-      className="relative z-10 px-10 pt-24 md:px-24 lg:px-32 md:pt-32 max-w-2xl w-full" 
+      className="relative z-10 px-6 sm:px-10 pt-24 md:px-24 lg:px-32 md:pt-32 max-w-2xl w-full" 
       variants={containerVariants}
       initial="hidden" 
       animate="visible" 
     >
       
-      {/* 1. Status 'Open to work' */}
+      {/* Availability Badge */}
       <motion.div 
         variants={itemVariants} 
         className="flex items-center space-x-2 mb-4"
       >
-        <div className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-        </div>
-        
-        <span className="text-xs md:text-lg font-medium text-green-400">Open to work</span>
+        {isOpenToWork ? (
+          // Open to Work — Green
+          <>
+            <div className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </div>
+            <span className="text-xs md:text-lg font-medium text-green-400">Open to work</span>
+          </>
+        ) : (
+          // Currently Not Available — Red
+          <>
+            <div className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+            </div>
+            <span className="text-xs md:text-lg font-medium text-red-400">Currently not available</span>
+          </>
+        )}
       </motion.div>
 
-      {/* 2. Jabatan */}
+      {/* Job Title */}
       <motion.p 
         variants={itemVariants}
-        className="text-lg md:text-2xl font-bold tracking-widest text-yellow-400 mb-2"
+        className="text-base sm:text-lg md:text-2xl font-bold tracking-widest text-yellow-400 mb-2"
       >
-        Designer | AI Visual
+        {jobTitle}
       </motion.p>
 
-      {/* 3. Nama (Ukuran Besar dan Rapat) */}
+      {/* Name — responsive font sizing */}
       <motion.h1 
         variants={itemVariants}
-        className="text-7xl md:text-9xl font-bold text-white mb-10 leading-none" 
+        className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-bold text-white mb-10 leading-none" 
       >
-        Renaldo Dasilva
+        {name}
       </motion.h1>
 
-      {/* 4. Info Kontak (Grid 2 Kolom) */}
+      {/* Contact Info Grid — auto-wrap, scalable */}
       <motion.div 
         variants={itemVariants}
-        // KUNCI PERBAIKAN: Gunakan grid-cols-1 default, lalu sm:grid-cols-2
-        // Hapus gap-x karena di 1 kolom tidak diperlukan
-        className="grid grid-cols-1 gap-y-4 md:gap-y-6 sm:grid-cols-2 sm:gap-x-6 md:gap-x-34 md:gap-y-8"
+        className="grid grid-cols-1 gap-y-4 md:gap-y-6 sm:grid-cols-2 sm:gap-x-6 md:gap-x-16 lg:gap-x-24 md:gap-y-8"
       >
-        <IconLink Icon={Mail} text="renaldosemma@gmail.com" href="mailto:renaldosemma@gmail.com" className="md:text-base" />
-        <IconLink Icon={Phone} text="+62 813 6558 0283" href="tel:+6281365580283" className="md:text-base" />
-        <IconLink Icon={Linkedin} text="Renaldo Semma Dasilva" href="https://linkedin.com/in/renaldosemmadasilva" target="_blank" className="md:text-base" />
-        <IconLink Icon={MapPin} text="Kundur, Indonesia" href="#" className="md:text-base" />
+        {contacts.map((contact, index) => {
+          const Icon = contactIconMap[contact.type] || Mail;
+          const isExternal = contact.type === 'linkedin';
+          return (
+            <IconLink 
+              key={index}
+              Icon={Icon} 
+              text={contact.label} 
+              href={contact.url}
+              target={isExternal ? '_blank' : '_self'}
+              className="md:text-base" 
+            />
+          );
+        })}
       </motion.div>
     </motion.div>
   );

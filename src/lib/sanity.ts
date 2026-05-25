@@ -3,11 +3,11 @@ import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 export const client = createClient({
-  projectId: 'gqh8oeu3', // Ganti ini (ambil dari studio/sanity.config.ts)
-  dataset: 'production',
-  useCdn: false,
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  useCdn: true,
   apiVersion: '2024-01-01',
-  token: 'skBZOob4NhhGGGNYJjN6MJgQlsaEdkyAE1a853CgZRsF5jNpbIzGHpBOTSIwaRpQsWJl5whFKlWyLUrdFeyCb3AQrO2Y6PK0W5GH0K8afbn7I7FGGJMSdnBJ6y2TRefjr6mlYoM84qk4ezjE7tdSzDj0aXORaSlj0hjOXM3poDjQ3yJr49C3',
+  token: process.env.NEXT_PUBLIC_SANITY_TOKEN,
 });
 
 const builder = imageUrlBuilder(client);
