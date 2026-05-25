@@ -6,10 +6,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface NavigationMenuProps {
   activeTab: string;
+  cvUrl?: string;
 }
 
-const NavigationMenu: React.FC<NavigationMenuProps> = ({ activeTab }) => {
+const NavigationMenu: React.FC<NavigationMenuProps> = ({ activeTab, cvUrl }) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  // Use CMS URL if available, fallback to /cv.pdf
+  const cvHref = cvUrl || '/cv.pdf';
+  const isExternal = cvUrl?.startsWith('http');
 
   return (
     <AnimatePresence>
@@ -23,8 +28,8 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ activeTab }) => {
         >
           
           <motion.a 
-            href="/cv.pdf" 
-            download 
+            href={cvHref}
+            {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : { download: true })}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             

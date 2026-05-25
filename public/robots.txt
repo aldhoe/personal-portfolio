@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://renaldodasilva.com/sitemap.xml
+Sitemap: https://renaldodasilva.vercel.app/sitemap.xml

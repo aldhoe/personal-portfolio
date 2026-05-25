@@ -188,7 +188,7 @@ export default function HomePage() {
         className="fixed inset-0 bg-black z-40"
       />
 
-      <NavigationMenu activeTab={activeTab} />
+      <NavigationMenu activeTab={activeTab} cvUrl={siteSettings?.cvFileUrl} />
 
       {/* Background Image + Gradients */}
       <div className="absolute inset-0 z-0">
