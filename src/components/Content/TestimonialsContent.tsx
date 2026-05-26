@@ -11,15 +11,16 @@ interface TestimonialsContentProps {
 
 const TestimonialsContent: React.FC<TestimonialsContentProps> = ({ testimonials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
-  // Auto scroll effect
+  // Auto scroll effect: depends on currentIndex so manual changes reset the timer
   useEffect(() => {
-    if (!testimonials || testimonials.length <= 1) return;
+    if (!testimonials || testimonials.length <= 1 || isPaused) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     }, 5000); // 5 seconds per slide
     return () => clearInterval(interval);
-  }, [testimonials]);
+  }, [testimonials, isPaused, currentIndex]);
 
   if (!testimonials || testimonials.length === 0) return null;
 
@@ -83,7 +84,13 @@ const TestimonialsContent: React.FC<TestimonialsContentProps> = ({ testimonials 
 
         {/* Kolom Kanan: Testimonial Card */}
         <div className="md:col-span-2">
-          <div className="relative">
+          <div 
+            className="relative"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
+          >
             {/* Testimonial Card */}
             <AnimatePresence mode="wait">
               <motion.div
@@ -97,7 +104,8 @@ const TestimonialsContent: React.FC<TestimonialsContentProps> = ({ testimonials 
                 dragElastic={0.2}
                 onDragEnd={handleDragEnd}
                 className="relative bg-white/5 backdrop-blur-sm border border-white/10 
-                           rounded-2xl p-6 md:p-8 min-h-[200px] cursor-grab active:cursor-grabbing"
+                           rounded-2xl p-6 md:p-8 h-[280px] md:h-[300px] flex flex-col justify-between 
+                           cursor-grab active:cursor-grabbing overflow-y-auto scrollbar-hide"
               >
                 {/* Quote Mark */}
                 <Quote className="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 text-yellow-400/20" />

@@ -41,6 +41,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
   const scrollContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [scrollStates, setScrollStates] = useState<{ canScrollLeft: boolean; canScrollRight: boolean }[]>([]);
   const [activeIndices, setActiveIndices] = useState<number[]>([]);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Initialize scroll states when data changes
   useEffect(() => {
@@ -106,7 +107,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
 
   // Mobile Auto-Scroll Effect
   useEffect(() => {
-    if (data.length === 0) return;
+    if (data.length === 0 || isPaused) return;
     
     const interval = setInterval(() => {
       // Only auto-scroll on mobile views (less than 768px wide)
@@ -132,7 +133,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
     }, 4000); // 4 seconds per auto-scroll
 
     return () => clearInterval(interval);
-  }, [data]);
+  }, [data, isPaused]);
 
   const scroll = (index: number, direction: 'left' | 'right') => {
     const container = scrollContainerRefs.current[index];
@@ -218,7 +219,13 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
             </h3>
 
             {/* Scroll Horizontal Cards */}
-            <div className="relative group/scroll">
+            <div 
+              className="relative group/scroll"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onTouchStart={() => setIsPaused(true)}
+              onTouchEnd={() => setIsPaused(false)}
+            >
               {/* Left Arrow */}
               {category.items.length > 3 && scrollStates[categoryIndex]?.canScrollLeft && (
                 <button
