@@ -131,6 +131,7 @@ export default function HomePage() {
         category,
         "items": items[]-> {
           title,
+          slug,
           description,
           subtitle,
           toolsUsed,
@@ -164,16 +165,50 @@ export default function HomePage() {
 
   const handleTabChange = (tabId: string) => {
     setSelectedProject(null);
+    window.history.pushState({}, '', window.location.pathname); // Clear URL params
     setActiveTab(tabId);
   };
   
   const handleProjectClose = () => {
     setSelectedProject(null);
+    window.history.pushState({}, '', window.location.pathname); // Clear URL params
+  };
+
+  const handleProjectSelect = (project: ProjectData) => {
+    setSelectedProject(project);
+    if (project.slug?.current) {
+      window.history.pushState({}, '', `?project=${project.slug.current}`);
+    }
   };
   
   useEffect(() => {
     setIsBlurActive(isBlurTarget || selectedProject !== null); 
   }, [isBlurTarget, selectedProject]);
+
+  // Deep linking: check URL for project on load
+  useEffect(() => {
+    if (portfolioData.length > 0) {
+      const params = new URLSearchParams(window.location.search);
+      const projectSlug = params.get('project');
+      
+      if (projectSlug) {
+        // Find the project across all categories
+        let foundProject: ProjectData | null = null;
+        for (const cat of portfolioData) {
+          const match = cat.items.find(p => p.slug?.current === projectSlug);
+          if (match) {
+            foundProject = match;
+            break;
+          }
+        }
+        
+        if (foundProject) {
+          setActiveTab('portfolio');
+          setSelectedProject(foundProject);
+        }
+      }
+    }
+  }, [portfolioData]);
 
   const showTabNavigation = selectedProject === null;
 
@@ -226,7 +261,7 @@ export default function HomePage() {
         <ContentContainer 
           activeTab={activeTab} 
           selectedProject={selectedProject} 
-          onProjectSelect={setSelectedProject}
+          onProjectSelect={handleProjectSelect}
           onProjectClose={handleProjectClose}
           portfolioData={portfolioData}
           portfolioLoading={portfolioLoading}

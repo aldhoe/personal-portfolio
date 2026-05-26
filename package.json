@@ -9,8 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@portabletext/react": "^6.2.0",
     "@sanity/client": "^7.12.0",
     "@sanity/image-url": "^1.2.0",
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.23.22",
     "lucide-react": "^0.544.0",
     "next": "^15.5.14",

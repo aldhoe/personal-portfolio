@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, ExternalLink, Play, Wrench, ZoomIn } from 'lucide-react';
 import { ProjectData } from '@/types/sanity';
 import ImageLightbox from '@/components/ui/ImageLightbox';
+import { PortableText } from '@portabletext/react';
 
 interface ProjectDetailProps {
   project: ProjectData;
@@ -180,9 +181,13 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) =
             <h4 className="text-lg md:text-xl font-bold text-yellow-400 mb-3 uppercase tracking-wider">
               About The Project
             </h4>
-            <p className="text-gray-300 leading-relaxed text-base whitespace-pre-line">
-              {project.description}
-            </p>
+            <div className="text-gray-300 leading-relaxed text-base space-y-4 [&>p]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-4 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-4 [&>a]:text-yellow-400 [&>a]:underline [&>h3]:text-xl [&>h3]:text-white [&>h3]:font-bold [&>h3]:mt-6 [&>h3]:mb-3">
+              {typeof project.description === 'string' ? (
+                <p className="whitespace-pre-line">{project.description}</p>
+              ) : (
+                <PortableText value={project.description as any} />
+              )}
+            </div>
           </div>
 
           {/* Tools Used */}

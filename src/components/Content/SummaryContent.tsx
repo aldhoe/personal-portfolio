@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { PortableText } from '@portabletext/react';
 
 interface SummaryContentProps {
   paragraphs?: string[];
@@ -27,10 +28,36 @@ const contentVariants = {
   },
 };
 
-// Fallback data
+// Fallback data (Portable Text format)
 const fallbackParagraphs = [
-  'I am a Creative Designer and AI Visual Specialist dedicated to transforming complex ideas into elegant, user-centric digital experiences. My design philosophy is rooted in empathy, clarity, and continuous learning, allowing me to adapt quickly to new trends and deliver impactful results for any project.',
-  'I thrive in collaborative environments, working closely with marketing and development teams to ensure brand consistency and seamless implementation.',
+  {
+    _type: 'block',
+    _key: 'fallback_1',
+    style: 'normal',
+    markDefs: [],
+    children: [
+      {
+        _type: 'span',
+        _key: 'span_1',
+        text: 'I am a Creative Designer and AI Visual Specialist dedicated to transforming complex ideas into elegant, user-centric digital experiences. My design philosophy is rooted in empathy, clarity, and continuous learning, allowing me to adapt quickly to new trends and deliver impactful results for any project.',
+        marks: [],
+      }
+    ]
+  },
+  {
+    _type: 'block',
+    _key: 'fallback_2',
+    style: 'normal',
+    markDefs: [],
+    children: [
+      {
+        _type: 'span',
+        _key: 'span_2',
+        text: 'I thrive in collaborative environments, working closely with marketing and development teams to ensure brand consistency and seamless implementation.',
+        marks: [],
+      }
+    ]
+  }
 ];
 
 const fallbackQuote = 'Driven by a curiosity to learn and improve, I continuously explore new tools and methodologies to enhance my work.';
@@ -60,11 +87,16 @@ export const SummaryContent: React.FC<SummaryContentProps> = ({ paragraphs, quot
         
         <div className="md:col-span-2 text-gray-200 space-y-6 text-base md:text-lg leading-relaxed">
           
-          {paraData.map((para, index) => (
-            <motion.p key={index} variants={itemVariants}>
-              {para}
-            </motion.p>
-          ))}
+          <motion.div variants={itemVariants} className="space-y-6 [&>p]:mb-4 [&>p]:leading-relaxed">
+            {typeof paraData[0] === 'string' ? (
+              // Handle old string array data gracefully
+              paraData.map((para, index) => (
+                <p key={index}>{para as string}</p>
+              ))
+            ) : (
+              <PortableText value={paraData as any} />
+            )}
+          </motion.div>
 
           <motion.div 
             variants={itemVariants}

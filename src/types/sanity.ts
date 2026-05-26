@@ -10,7 +10,8 @@ export interface GalleryImage {
 
 export interface ProjectData {
   title: string;
-  description: string;
+  slug: { current: string };
+  description: any[];      // Portable Text
   subtitle: string;
   toolsUsed?: string[];    // Tools/tech used — shown as tags
   imageUrl: string;
@@ -57,11 +58,16 @@ export interface SiteSettings {
   profileImageUrl?: string;
   cvFileUrl?: string;
   contactInfo: ContactItem[];
-  summaryParagraphs: string[];
+  summaryParagraphs: any[]; // Portable Text
   summaryQuote: string;
   skills: string[];
   tools: ToolItem[];
   socialLinks: SocialLink[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    ogImage?: string;
+  };
 }
 
 // ============================

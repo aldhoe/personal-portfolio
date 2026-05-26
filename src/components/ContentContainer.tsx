@@ -47,6 +47,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   const [isScrolling, setIsScrolling] = useState(false);
   const [showTopFade, setShowTopFade] = useState(false);
   const [showBottomFade, setShowBottomFade] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleScroll = () => {
@@ -63,6 +64,11 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       const { scrollTop, scrollHeight, clientHeight } = element;
       setShowTopFade(scrollTop > 50);
       setShowBottomFade(scrollTop + clientHeight < scrollHeight - 50);
+      
+      // Calculate scroll progress percentage (0 to 100)
+      const maxScroll = scrollHeight - clientHeight;
+      const progress = maxScroll > 0 ? (scrollTop / maxScroll) * 100 : 0;
+      setScrollProgress(progress);
     }
   };
   
@@ -76,11 +82,19 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   }, [activeTab]);
 
   const scrollableContentWrapper = (content: React.ReactNode) => (
-    <div className="relative w-full max-w-5xl mx-auto px-4 md:px-0 h-full">
+    <div className="relative w-full max-w-5xl mx-auto px-4 md:px-0 h-full pt-6">
+      {/* Scroll Progress Indicator */}
+      <div className="absolute top-0 left-4 right-4 md:left-0 md:right-0 h-[2px] bg-white/10 rounded-full overflow-hidden z-50">
+        <div 
+          className="h-full bg-yellow-400 transition-all duration-150 ease-out"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
+
       <div 
         ref={scrollRef}
         onScroll={handleScroll}
-        className={`w-full h-full overflow-y-auto ${isScrolling ? 'scroll-visible' : 'scroll-hidden'}`}
+        className={`w-full h-full overflow-y-auto mt-2 ${isScrolling ? 'scroll-visible' : 'scroll-hidden'}`}
         style={{ 
           paddingTop: '2rem', 
           paddingBottom: '9rem',
