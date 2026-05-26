@@ -23,6 +23,20 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  cursor: default; /* Disable text cursor globally */
+}
+
+/* Force default cursor on all text elements so it doesn't show the I-beam, unless it's an input */
+p, h1, h2, h3, h4, h5, h6, span, div, li {
+  cursor: default;
+}
+
+a, button, [role="button"], label {
+  cursor: pointer;
+}
+
+input, textarea {
+  cursor: text;
 }
 
 /* ======================================= */

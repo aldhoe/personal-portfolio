@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
 import { TestimonialData } from '@/types/sanity';
 
@@ -11,6 +11,15 @@ interface TestimonialsContentProps {
 
 const TestimonialsContent: React.FC<TestimonialsContentProps> = ({ testimonials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto scroll effect
+  useEffect(() => {
+    if (!testimonials || testimonials.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 5000); // 5 seconds per slide
+    return () => clearInterval(interval);
+  }, [testimonials]);
 
   if (!testimonials || testimonials.length === 0) return null;
 
@@ -23,6 +32,16 @@ const TestimonialsContent: React.FC<TestimonialsContentProps> = ({ testimonials 
 
   const goRight = () => {
     if (canGoRight) setCurrentIndex(prev => prev + 1);
+  };
+
+  const handleDragEnd = (e: any, { offset, velocity }: PanInfo) => {
+    const swipe = offset.x;
+    const swipeThreshold = 50;
+    if (swipe < -swipeThreshold && canGoRight) {
+      goRight();
+    } else if (swipe > swipeThreshold && canGoLeft) {
+      goLeft();
+    }
   };
 
   const current = testimonials[currentIndex];
@@ -73,8 +92,12 @@ const TestimonialsContent: React.FC<TestimonialsContentProps> = ({ testimonials 
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={handleDragEnd}
                 className="relative bg-white/5 backdrop-blur-sm border border-white/10 
-                           rounded-2xl p-6 md:p-8 min-h-[200px]"
+                           rounded-2xl p-6 md:p-8 min-h-[200px] cursor-grab active:cursor-grabbing"
               >
                 {/* Quote Mark */}
                 <Quote className="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 text-yellow-400/20" />
@@ -109,39 +132,36 @@ const TestimonialsContent: React.FC<TestimonialsContentProps> = ({ testimonials 
               </motion.div>
             </AnimatePresence>
 
-            {/* Navigation */}
+            {/* Netflix-style Navigation Arrows */}
             {testimonials.length > 1 && (
-              <div className="flex items-center justify-between mt-6">
-                {/* Arrow Buttons */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={goLeft}
-                    disabled={!canGoLeft}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200
-                      ${canGoLeft 
-                        ? 'bg-white/10 hover:bg-white/20 text-white cursor-pointer' 
-                        : 'bg-white/5 text-white/20 cursor-not-allowed'
-                      }`}
-                    aria-label="Previous testimonial"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={goRight}
-                    disabled={!canGoRight}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200
-                      ${canGoRight 
-                        ? 'bg-white/10 hover:bg-white/20 text-white cursor-pointer' 
-                        : 'bg-white/5 text-white/20 cursor-not-allowed'
-                      }`}
-                    aria-label="Next testimonial"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
+              <>
+                <button
+                  onClick={goLeft}
+                  disabled={!canGoLeft}
+                  className={`absolute top-1/2 -left-4 md:-left-6 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 z-10 shadow-lg
+                    ${canGoLeft 
+                      ? 'bg-black/80 hover:bg-black border border-white/20 text-white cursor-pointer' 
+                      : 'bg-black/40 border border-white/5 text-white/20 cursor-not-allowed opacity-0'
+                    }`}
+                  aria-label="Previous testimonial"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={goRight}
+                  disabled={!canGoRight}
+                  className={`absolute top-1/2 -right-4 md:-right-6 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 z-10 shadow-lg
+                    ${canGoRight 
+                      ? 'bg-black/80 hover:bg-black border border-white/20 text-white cursor-pointer' 
+                      : 'bg-black/40 border border-white/5 text-white/20 cursor-not-allowed opacity-0'
+                    }`}
+                  aria-label="Next testimonial"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
 
-                {/* Dots */}
-                <div className="flex gap-2">
+                {/* Dots indicator at the bottom */}
+                <div className="flex items-center justify-center gap-2 mt-8">
                   {testimonials.map((_, i) => (
                     <button
                       key={i}
@@ -155,7 +175,7 @@ const TestimonialsContent: React.FC<TestimonialsContentProps> = ({ testimonials 
                     />
                   ))}
                 </div>
-              </div>
+              </>
             )}
           </div>
         </div>

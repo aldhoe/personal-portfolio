@@ -40,11 +40,13 @@ const itemVariants = {
 const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, loading, error }) => {
   const scrollContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [scrollStates, setScrollStates] = useState<{ canScrollLeft: boolean; canScrollRight: boolean }[]>([]);
+  const [activeIndices, setActiveIndices] = useState<number[]>([]);
 
   // Initialize scroll states when data changes
   useEffect(() => {
     if (data.length > 0) {
       setScrollStates(data.map(() => ({ canScrollLeft: false, canScrollRight: true })));
+      setActiveIndices(data.map(() => 0));
     }
   }, [data]);
 
@@ -60,6 +62,19 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
       newStates[index] = { canScrollLeft, canScrollRight };
       return newStates;
     });
+
+    // Update active index for dots (bullets) based on scroll position
+    const firstChild = container.children[0] as HTMLElement;
+    if (firstChild) {
+      // Calculate width including gap
+      const itemWidth = firstChild.offsetWidth + 24; // 24px is space-x-6 (1.5rem)
+      const currentIdx = Math.round(container.scrollLeft / itemWidth);
+      setActiveIndices(prev => {
+        const newIndices = [...prev];
+        newIndices[index] = currentIdx;
+        return newIndices;
+      });
+    }
   };
 
   useEffect(() => {
@@ -72,7 +87,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
 
     containers.forEach((container, index) => {
       if (container) {
-        container.addEventListener('scroll', handleScroll(index));
+        container.addEventListener('scroll', handleScroll(index), { passive: true });
         checkScrollability(index);
       }
     });
@@ -87,6 +102,36 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
       });
       window.removeEventListener('resize', handleResize);
     };
+  }, [data]);
+
+  // Mobile Auto-Scroll Effect
+  useEffect(() => {
+    if (data.length === 0) return;
+    
+    const interval = setInterval(() => {
+      // Only auto-scroll on mobile views (less than 768px wide)
+      if (window.innerWidth >= 768) return;
+
+      const containers = scrollContainerRefs.current;
+      containers.forEach((container, index) => {
+        if (!container) return;
+        
+        const firstChild = container.children[0] as HTMLElement;
+        if (!firstChild) return;
+
+        const itemWidth = firstChild.offsetWidth + 24;
+        let nextLeft = container.scrollLeft + itemWidth;
+        
+        // If at the end, snap back to start
+        if (container.scrollLeft >= container.scrollWidth - container.clientWidth - 10) {
+          nextLeft = 0;
+        }
+        
+        container.scrollTo({ left: nextLeft, behavior: 'smooth' });
+      });
+    }, 4000); // 4 seconds per auto-scroll
+
+    return () => clearInterval(interval);
   }, [data]);
 
   const scroll = (index: number, direction: 'left' | 'right') => {
@@ -262,6 +307,22 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
                   </motion.div> 
                 ))}
               </div>
+
+              {/* Mobile Pagination Dots */}
+              {category.items.length > 1 && (
+                <div className="flex md:hidden items-center justify-center gap-1.5 mt-4">
+                  {category.items.map((_, dotIndex) => (
+                    <div 
+                      key={dotIndex}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        activeIndices[categoryIndex] === dotIndex 
+                          ? 'w-6 bg-yellow-400' 
+                          : 'w-1.5 bg-white/20'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         ))}

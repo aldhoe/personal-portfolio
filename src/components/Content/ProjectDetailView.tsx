@@ -59,7 +59,11 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) =
     [mediaItems]
   );
 
-  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
+  const [activeMediaIndex, setActiveMediaIndex] = useState(() => {
+    // If project has video, auto-focus to video slide
+    const videoIndex = mediaItems.findIndex(m => m.type === 'video');
+    return videoIndex >= 0 ? videoIndex : 0;
+  });
   const activeMedia = mediaItems[activeMediaIndex] || mediaItems[0];
   const hasMultipleMedia = mediaItems.length > 1;
 
