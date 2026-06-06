@@ -59,7 +59,7 @@ export default function HomePage() {
           jobTitle,
           isOpenToWork,
           profileImageUrl,
-          cvFileUrl,
+          "cvFileUrl": cvFile.asset->url,
           contactInfo[] {
             type,
             label,

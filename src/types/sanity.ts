@@ -56,7 +56,7 @@ export interface SiteSettings {
   jobTitle: string;
   isOpenToWork: boolean;
   profileImageUrl?: string;
-  cvFileUrl?: string;
+  cvFileUrl?: string;      // Resolved from Sanity file upload
   contactInfo: ContactItem[];
   summaryParagraphs: any[]; // Portable Text
   summaryQuote: string;

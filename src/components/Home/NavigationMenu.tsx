@@ -12,9 +12,8 @@ interface NavigationMenuProps {
 const NavigationMenu: React.FC<NavigationMenuProps> = ({ activeTab, cvUrl }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  // Use CMS URL if available, fallback to /cv.pdf
-  const cvHref = cvUrl || '/cv.pdf';
-  const isExternal = cvUrl?.startsWith('http');
+  // Use CMS file URL if available, fallback to /cv.pdf
+  const cvHref = cvUrl ? `${cvUrl}?dl=Renaldo_Dasilva_CV.pdf` : '/cv.pdf';
 
   return (
     <AnimatePresence>
@@ -29,7 +28,7 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ activeTab, cvUrl }) => 
           
           <motion.a 
             href={cvHref}
-            {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : { download: true })}
+            download="Renaldo_Dasilva_CV.pdf"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             
