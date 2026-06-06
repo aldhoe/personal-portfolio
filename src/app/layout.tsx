@@ -37,8 +37,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = settings?.seo?.metaDescription || defaultDesc;
   const ogImage = settings?.seo?.ogImage || '/images/profile-dark-bg.jpg';
 
+  // Use custom domain if set, otherwise Vercel's auto-provided URL, or localhost for dev
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL 
+    || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+
   return {
-    metadataBase: new URL('https://renaldodasilva.com'),
+    metadataBase: new URL(siteUrl),
     title,
     description,
     keywords: ['creative designer', 'AI visual', 'graphic designer', 'video editor', 'portfolio', 'Renaldo Semma Dasilva'],
