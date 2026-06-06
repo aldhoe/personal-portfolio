@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogImage = settings?.seo?.ogImage || '/images/profile-dark-bg.jpg';
 
   return {
-    metadataBase: new URL('https://renaldosemmadasilva.com'),
+    metadataBase: new URL('https://renaldodasilva.com'),
     title,
     description,
     keywords: ['creative designer', 'AI visual', 'graphic designer', 'video editor', 'portfolio', 'Renaldo Semma Dasilva'],
