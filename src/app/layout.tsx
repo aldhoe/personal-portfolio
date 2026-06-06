@@ -51,6 +51,8 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: 'website',
+      url: siteUrl,
+      siteName: title,
       locale: 'en_US',
       images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
     },
