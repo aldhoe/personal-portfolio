@@ -72,9 +72,27 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
     }
   };
   
+  // Reset scroll progress immediately when tab changes
   useEffect(() => {
-    handleScroll();
+    // Reset all scroll-related state instantly to avoid stale values
+    setScrollProgress(0);
+    setShowTopFade(false);
+    setShowBottomFade(true);
+    setIsScrolling(false);
+
+    // Scroll the container back to top and recalculate after new content mounts
+    // Use a small delay + rAF to ensure the new DOM is ready
+    const resetTimeout = setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = 0;
+          handleScroll();
+        }
+      });
+    }, 50);
+
     return () => {
+      clearTimeout(resetTimeout);
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }

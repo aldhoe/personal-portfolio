@@ -83,16 +83,22 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                 variants={itemVariants}
                 className="mb-12"
             >
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap items-center gap-4">
                     {socialData.map((link, index) => {
                       const iconSrc = link.iconUrl || link.sanityIcon || '';
+                      const hasBg = !!link.bgColor;
+
                       return (
                         <a 
                             key={index} 
                             href={link.url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className={`group p-3 rounded-xl transition-transform hover:scale-105 ${link.bgColor || 'bg-white'}`}
+                            className={`group flex items-center justify-center transition-all duration-300 hover:scale-110 rounded-xl ${
+                              hasBg
+                                ? `p-3 ${link.bgColor}`
+                                : 'p-2'
+                            }`}
                             aria-label={link.name}
                         >
                             {iconSrc ? (
@@ -100,10 +106,14 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                                 src={iconSrc} 
                                 alt={link.name}
                                 loading="lazy"
-                                className="w-10 h-10 object-contain transition-transform duration-300 group-hover:scale-110"
+                                className={`object-contain transition-transform duration-300 group-hover:scale-110 ${
+                                  hasBg ? 'w-10 h-10' : 'w-12 h-12'
+                                }`}
                               />
                             ) : (
-                              <div className="w-10 h-10 flex items-center justify-center font-bold text-lg">
+                              <div className={`flex items-center justify-center font-bold text-lg text-white ${
+                                hasBg ? 'w-10 h-10' : 'w-12 h-12'
+                              }`}>
                                 {link.name.charAt(0)}
                               </div>
                             )}
