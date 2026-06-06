@@ -104,9 +104,7 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                                 src={iconSrc} 
                                 alt={link.name}
                                 loading="lazy"
-                                className={`object-contain transition-transform duration-300 group-hover:scale-110 ${
-                                  hasBg ? 'w-10 h-10' : 'w-full h-full rounded-xl'
-                                }`}
+                                className="w-10 h-10 object-contain transition-transform duration-300 group-hover:scale-110"
                               />
                             ) : (
                               <div className="w-10 h-10 flex items-center justify-center font-bold text-lg text-white">
