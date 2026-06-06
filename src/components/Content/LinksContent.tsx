@@ -94,10 +94,8 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                             href={link.url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className={`group flex items-center justify-center transition-all duration-300 hover:scale-110 rounded-xl ${
-                              hasBg
-                                ? `p-3 ${link.bgColor}`
-                                : 'p-2'
+                            className={`group w-16 h-16 flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 hover:scale-110 ${
+                              hasBg ? link.bgColor : ''
                             }`}
                             aria-label={link.name}
                         >
@@ -107,13 +105,11 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                                 alt={link.name}
                                 loading="lazy"
                                 className={`object-contain transition-transform duration-300 group-hover:scale-110 ${
-                                  hasBg ? 'w-10 h-10' : 'w-12 h-12'
+                                  hasBg ? 'w-10 h-10' : 'w-full h-full rounded-xl'
                                 }`}
                               />
                             ) : (
-                              <div className={`flex items-center justify-center font-bold text-lg text-white ${
-                                hasBg ? 'w-10 h-10' : 'w-12 h-12'
-                              }`}>
+                              <div className="w-10 h-10 flex items-center justify-center font-bold text-lg text-white">
                                 {link.name.charAt(0)}
                               </div>
                             )}
