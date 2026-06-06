@@ -2,20 +2,33 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
-import { client } from '@/lib/sanity';
+import { createClient } from '@sanity/client';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// Separate uncached client for metadata — ensures fresh data from Sanity
+const metaClient = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  useCdn: false,
+  apiVersion: '2024-01-01',
+  token: process.env.NEXT_PUBLIC_SANITY_TOKEN,
+});
+
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await client.fetch(`*[_type == "siteSettings"][0]{
-    name,
-    jobTitle,
-    "seo": seo {
-      metaTitle,
-      metaDescription,
-      "ogImage": ogImage.asset->url
-    }
-  }`);
+  const settings = await metaClient.fetch(
+    `*[_type == "siteSettings"][0]{
+      name,
+      jobTitle,
+      "seo": seo {
+        metaTitle,
+        metaDescription,
+        "ogImage": ogImage.asset->url
+      }
+    }`,
+    {},
+    { next: { revalidate: 60 } }
+  );
 
   const defaultTitle = 'Renaldo Semma D. | Creative Designer & AI Visual Specialist';
   const defaultDesc = 'Personal Portfolio of Renaldo Semma Dasilva — Creative Designer & AI Visual Specialist. Graphic design, video editing, and AI-driven visual exploration.';
