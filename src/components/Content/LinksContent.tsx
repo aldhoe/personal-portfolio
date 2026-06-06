@@ -86,7 +86,6 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                 <div className="flex flex-wrap items-center gap-4">
                     {socialData.map((link, index) => {
                       const iconSrc = link.iconUrl || link.sanityIcon || '';
-                      const hasBg = !!link.bgColor;
 
                       return (
                         <a 
@@ -95,7 +94,7 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                             target="_blank" 
                             rel="noopener noreferrer"
                             className={`group w-16 h-16 flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 hover:scale-110 ${
-                              hasBg ? link.bgColor : ''
+                              link.bgColor || ''
                             }`}
                             aria-label={link.name}
                         >
@@ -104,10 +103,10 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                                 src={iconSrc} 
                                 alt={link.name}
                                 loading="lazy"
-                                className="w-10 h-10 object-contain transition-transform duration-300 group-hover:scale-110"
+                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                               />
                             ) : (
-                              <div className="w-10 h-10 flex items-center justify-center font-bold text-lg text-white">
+                              <div className="w-full h-full flex items-center justify-center font-bold text-xl text-white bg-neutral-700">
                                 {link.name.charAt(0)}
                               </div>
                             )}
