@@ -32,6 +32,7 @@ export default function HomePage() {
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [experiences, setExperiences] = useState<ExperienceData[]>([]);
   const [testimonials, setTestimonials] = useState<TestimonialData[]>([]);
+  const [cmsReady, setCmsReady] = useState(false);
 
   // Portfolio data caching
   const [portfolioData, setPortfolioData] = useState<PortfolioCategory[]>([]);
@@ -44,6 +45,9 @@ export default function HomePage() {
   // ============================
   useEffect(() => {
     fetchCmsData();
+    // Safety: if CMS takes too long, reveal content anyway after 3s
+    const safetyTimer = setTimeout(() => setCmsReady(true), 3000);
+    return () => clearTimeout(safetyTimer);
   }, []);
 
   const fetchCmsData = async () => {
@@ -109,9 +113,10 @@ export default function HomePage() {
         }));
         setTestimonials(mergedTests);
       }
+      setCmsReady(true);
     } catch (err) {
       console.error('Error fetching CMS data:', err);
-      // Components will use fallback data
+      setCmsReady(true); // Reveal content even on error — components use fallback data
     }
   };
 
@@ -215,11 +220,11 @@ export default function HomePage() {
   return (
     <main className="min-h-screen relative overflow-hidden flex flex-col bg-black"> 
       
-      {/* Initial Load Overlay */}
+      {/* Initial Load Overlay — stays visible until CMS data is ready */}
       <motion.div
         initial={{ opacity: 1 }}
-        animate={{ opacity: 0, pointerEvents: 'none' }}
-        transition={{ duration: 1.5, ease: "easeInOut" }}
+        animate={{ opacity: cmsReady ? 0 : 1, pointerEvents: cmsReady ? 'none' : 'auto' }}
+        transition={{ duration: 1, ease: "easeInOut" }}
         className="fixed inset-0 bg-black z-40"
       />
 
