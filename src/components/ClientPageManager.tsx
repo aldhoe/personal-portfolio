@@ -86,7 +86,8 @@ export default function ClientPageManager({ initialProject }: ClientPageManagerP
       
       {/* Main Content */}
       <div className="relative z-10 flex-grow 
-          flex items-center justify-start py-0 w-full
+          flex items-center justify-start 
+          px-6 sm:px-10 md:px-24 lg:px-32 py-0 
         "
       >
         <ContentContainer 

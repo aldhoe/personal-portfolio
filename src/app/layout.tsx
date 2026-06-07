@@ -1,5 +1,5 @@
 import './globals.css';
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { createClient } from '@sanity/client';
@@ -14,12 +14,6 @@ const metaClient = createClient({
   apiVersion: '2024-01-01',
   token: process.env.NEXT_PUBLIC_SANITY_TOKEN,
 });
-
-export const viewport: Viewport = {
-  themeColor: '#0a0a0a',
-  width: 'device-width',
-  initialScale: 1,
-};
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await metaClient.fetch(
@@ -87,6 +81,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body 
         className={`${inter.className} bg-black text-white antialiased`}

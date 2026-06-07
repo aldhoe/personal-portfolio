@@ -87,6 +87,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }
+    };
   }, [activeTab]);
 
   const scrollableContentWrapper = (content: React.ReactNode) => (
@@ -99,7 +100,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
         />
       </div>
 
-      <div className="relative w-full h-full pt-6">
+      <div className="relative w-full max-w-5xl mx-auto h-full pt-6">
 
       <div 
         ref={scrollRef}
@@ -120,9 +121,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
             transparent 100%)`
         }}
       >
-        <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 md:px-24 lg:px-32">
-          {content}
-        </div>
+        {content}
       </div>
     </div>
     </>
@@ -130,12 +129,10 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
 
   const commonContentWrapper = (content: React.ReactNode) => (
     <div 
-      className="w-full max-h-screen overflow-y-auto scrollbar-hide"
+      className="w-full max-w-5xl mx-auto max-h-screen overflow-y-auto scrollbar-hide"
       style={{ paddingTop: '7rem', paddingBottom: '14rem' }} 
     >
-      <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 md:px-24 lg:px-32">
-        {content}
-      </div>
+      {content}
     </div>
   );
 
