@@ -35,7 +35,11 @@ export async function generateMetadata(): Promise<Metadata> {
   
   const title = settings?.seo?.metaTitle || (settings ? `${settings.name} | ${settings.jobTitle}` : defaultTitle);
   const description = settings?.seo?.metaDescription || defaultDesc;
-  const ogImage = settings?.seo?.ogImage || '/images/profile-dark-bg.jpg';
+  let ogImage = settings?.seo?.ogImage || '/images/profile-dark-bg.jpg';
+  // If the image is from Sanity, append queries to convert to JPG and reduce quality to keep it under 300KB for WhatsApp
+  if (ogImage.startsWith('https://cdn.sanity.io')) {
+    ogImage = `${ogImage}?w=1200&h=630&fit=crop&fm=jpg&q=80`;
+  }
 
   // Use custom domain if set, otherwise Vercel's auto-provided URL, or localhost for dev
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL 
