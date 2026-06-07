@@ -101,3 +101,21 @@ input, textarea {
   scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
   scrollbar-width: thin;
 }
+
+/* 3. CUSTOM SLIM SCROLLBAR (Yellow Theme) */
+.custom-slim-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-slim-scrollbar.scroll-visible::-webkit-scrollbar-thumb {
+  background: rgba(250, 204, 21, 0.6) !important; /* Yellow-400 */
+  border-radius: 4px;
+}
+.custom-slim-scrollbar.scroll-visible::-webkit-scrollbar-thumb:hover {
+  background: rgba(250, 204, 21, 0.9) !important;
+}
+.custom-slim-scrollbar.scroll-hidden {
+  scrollbar-color: transparent transparent; 
+}
+.custom-slim-scrollbar.scroll-visible {
+  scrollbar-color: rgba(250, 204, 21, 0.6) transparent;
+}

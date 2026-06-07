@@ -91,19 +91,21 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   }, [activeTab]);
 
   const scrollableContentWrapper = (content: React.ReactNode) => (
-    <div className="relative w-full max-w-5xl mx-auto h-full pt-6">
-      {/* Scroll Progress Indicator - Edge-to-Edge on Desktop, Hidden on Mobile */}
-      <div className="fixed top-0 left-0 right-0 h-[2px] bg-white/10 z-[100] hidden md:block">
+    <>
+      {/* Scroll Progress Indicator - Edge to Edge on Desktop, Hidden on Mobile */}
+      <div className="hidden md:block fixed top-0 left-0 right-0 h-[3px] bg-white/5 z-[100] overflow-hidden">
         <div 
-          className="h-full bg-yellow-400 transition-all duration-150 ease-out"
+          className="h-full bg-yellow-400 transition-all duration-150 ease-out shadow-[0_0_10px_rgba(250,204,21,0.5)]"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
 
+      <div className="relative w-full max-w-5xl mx-auto h-full pt-6">
+
       <div 
         ref={scrollRef}
         onScroll={handleScroll}
-        className={`w-full h-full overflow-y-auto mt-2 ${isScrolling ? 'scroll-visible' : 'scroll-hidden'}`}
+        className={`w-full h-full overflow-y-auto mt-2 custom-slim-scrollbar ${isScrolling ? 'scroll-visible' : 'scroll-hidden'}`}
         style={{ 
           paddingTop: '2rem', 
           paddingBottom: '9rem',
@@ -122,6 +124,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
         {content}
       </div>
     </div>
+    </>
   );
 
   const commonContentWrapper = (content: React.ReactNode) => (
