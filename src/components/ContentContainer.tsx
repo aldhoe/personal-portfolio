@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect } from 'react'; 
 import { AnimatePresence, motion } from 'framer-motion';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 import Image from 'next/image';
 import HeroSection from './Home/HeroSection'; 
 import { SummaryContent } from './Content/SummaryContent'; 
@@ -90,6 +91,10 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
     };
   }, [activeTab]);
 
+  const handleRefresh = async () => {
+    window.location.reload();
+  };
+
   const scrollableContentWrapper = (content: React.ReactNode) => (
     <>
       {/* Scroll Progress Indicator - Edge to Edge on Desktop, Hidden on Mobile */}
@@ -121,7 +126,13 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
             transparent 100%)`
         }}
       >
-        {content}
+        <PullToRefresh 
+          onRefresh={handleRefresh} 
+          pullingContent={''} // We can leave pulling content default or empty
+          backgroundColor="transparent"
+        >
+          {content}
+        </PullToRefresh>
       </div>
     </div>
     </>
@@ -132,7 +143,13 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       className="w-full max-w-5xl mx-auto max-h-screen overflow-y-auto scrollbar-hide"
       style={{ paddingTop: '7rem', paddingBottom: '14rem' }} 
     >
-      {content}
+      <PullToRefresh 
+        onRefresh={handleRefresh} 
+        pullingContent={''}
+        backgroundColor="transparent"
+      >
+        {content}
+      </PullToRefresh>
     </div>
   );
 
