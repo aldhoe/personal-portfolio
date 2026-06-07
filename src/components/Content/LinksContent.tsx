@@ -122,54 +122,50 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                 </div>
             </motion.div>
             
-            {/* CTA / Direct Contact */}
+            {/* CTA / Direct Contact (Minimalist) */}
             {contactData.length > 0 && (
               <motion.div 
                   variants={itemVariants}
-                  className="mt-16 bg-neutral-900/40 border border-white/5 rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden"
+                  className="space-y-6 pt-4 border-t border-white/10"
               >
-                  {/* Subtle Background Glows */}
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400/5 blur-[120px] rounded-full pointer-events-none"></div>
-                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-yellow-400/5 blur-[120px] rounded-full pointer-events-none"></div>
-
-                  <div className="relative z-10">
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">
-                        Have an <span className="text-yellow-400">Idea?</span> Let's Talk.
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                        Interested in working with me?
                     </h3>
-                    <p className="text-gray-400 text-sm sm:text-base max-w-md mx-auto mb-8 leading-relaxed">
-                        I'm currently available for freelance work and open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+                    <p className="text-gray-400 text-base leading-relaxed max-w-lg">
+                        I'm always open to discussing product design work, partnership opportunities, or how I can help bring your vision to life.
                     </p>
-                    
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                      {contactData.map((contact, index) => {
-                        const isEmail = contact.type === 'email';
-                        const Icon = getContactIcon(contact.type);
-                        
-                        return isEmail ? (
-                          <a 
-                            key={index}
-                            href={contact.url} 
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2.5 bg-yellow-400 hover:bg-yellow-500 text-black px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto shadow-[0_0_20px_rgba(250,204,21,0.2)]"
-                          >
-                            <Icon className="w-5 h-5" />
-                            <span>Drop an Email</span>
-                          </a>
-                        ) : (
-                          <a 
-                            key={index}
-                            href={contact.url} 
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto"
-                          >
-                            <Icon className="w-5 h-5" />
-                            <span>WhatsApp Me</span>
-                          </a>
-                        );
-                      })}
-                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row items-start gap-4 pt-2">
+                    {contactData.map((contact, index) => {
+                      const isEmail = contact.type === 'email';
+                      const Icon = getContactIcon(contact.type);
+                      
+                      return isEmail ? (
+                        <a 
+                          key={index}
+                          href={contact.url} 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center gap-3 bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded-xl font-bold transition-all duration-300 w-full sm:w-auto"
+                        >
+                          <Icon className="w-5 h-5" />
+                          <span>Drop an Email</span>
+                        </a>
+                      ) : (
+                        <a 
+                          key={index}
+                          href={contact.url} 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center gap-3 bg-transparent hover:bg-white/5 border border-white/20 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 w-full sm:w-auto"
+                        >
+                          <Icon className="w-5 h-5 text-yellow-400 group-hover:scale-110 transition-transform duration-300" />
+                          <span>Chat on WhatsApp</span>
+                        </a>
+                      );
+                    })}
                   </div>
               </motion.div>
             )}
