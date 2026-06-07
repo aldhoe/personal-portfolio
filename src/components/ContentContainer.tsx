@@ -177,6 +177,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
           <LinksContent 
             socialLinks={siteSettings?.socialLinks}
             contactInfo={siteSettings?.contactInfo}
+            ctaTitle={siteSettings?.ctaTitle}
+            ctaDescription={siteSettings?.ctaDescription}
           />
         );
       default:

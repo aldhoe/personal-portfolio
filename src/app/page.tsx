@@ -43,7 +43,9 @@ export default async function HomePage({ searchParams }: PageProps) {
         "sanityIcon": icon.asset->url,
         url,
         bgColor
-      }
+      },
+      ctaTitle,
+      ctaDescription
     }`, {}, fetchOptions),
 
     client.fetch(`*[_type == "experience"] | order(order asc) {

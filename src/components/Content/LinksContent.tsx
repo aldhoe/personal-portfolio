@@ -14,6 +14,8 @@ const WhatsappIcon = ({ className }: { className?: string }) => (
 interface LinksContentProps {
   socialLinks?: SocialLink[];
   contactInfo?: ContactItem[];
+  ctaTitle?: string;
+  ctaDescription?: string;
 }
 
 const contentVariants = {
@@ -43,7 +45,7 @@ const fallbackSocialLinks: SocialLink[] = [
 
 const fallbackContactInfo: ContactItem[] = [
   { type: "email", label: "renaldosemma@gmail.com", url: "mailto:renaldosemma@gmail.com" },
-  { type: "phone", label: "+62 813 6558 0283", url: "tel:+6281365580283" },
+  { type: "phone", label: "+62 813 6558 0283", url: "https://wa.me/6281365580283" },
 ];
 
 // Map contact type to icon
@@ -55,11 +57,14 @@ const getContactIcon = (type: string) => {
   }
 };
 
-const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo }) => {
+const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo, ctaTitle, ctaDescription }) => {
   const socialData = socialLinks && socialLinks.length > 0 ? socialLinks : fallbackSocialLinks;
   const contactData = contactInfo 
     ? contactInfo.filter(c => c.type === 'email' || c.type === 'phone')
     : fallbackContactInfo;
+    
+  const finalCtaTitle = ctaTitle || "Interested in working with me?";
+  const finalCtaDesc = ctaDescription || "I'm always open to discussing product design work, partnership opportunities, or how I can help bring your vision to life.";
 
   return (
     <motion.div 
@@ -130,10 +135,10 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
               >
                   <div>
                     <h3 className="text-2xl font-bold text-white mb-2">
-                        Interested in working with me?
+                        {finalCtaTitle}
                     </h3>
                     <p className="text-gray-400 text-base leading-relaxed max-w-lg">
-                        I'm always open to discussing product design work, partnership opportunities, or how I can help bring your vision to life.
+                        {finalCtaDesc}
                     </p>
                   </div>
                   

@@ -63,6 +63,8 @@ export interface SiteSettings {
   skills: string[];
   tools: ToolItem[];
   socialLinks: SocialLink[];
+  ctaTitle?: string;
+  ctaDescription?: string;
   seo?: {
     metaTitle?: string;
     metaDescription?: string;
