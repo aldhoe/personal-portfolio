@@ -122,56 +122,54 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                 </div>
             </motion.div>
             
-            {/* Direct Contact */}
+            {/* CTA / Direct Contact */}
             {contactData.length > 0 && (
               <motion.div 
                   variants={itemVariants}
-                  className="space-y-6"
+                  className="mt-16 bg-neutral-900/40 border border-white/5 rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden"
               >
-                  <h3 className="text-xl font-bold text-white mb-2 uppercase">
-                      Direct Contact
-                  </h3>
-                  
-                  <div className="flex flex-col gap-4 mt-4">
-                    {contactData.map((contact, index) => {
-                      const Icon = getContactIcon(contact.type);
-                      const isEmail = contact.type === 'email';
-                      
-                      return (
-                        <a 
-                          key={index}
-                          href={contact.url} 
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="group relative flex items-center justify-between p-4 sm:px-6 sm:py-4 w-full rounded-2xl bg-white/5 border border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all duration-300 overflow-hidden"
-                        >
-                          {/* Background Glow Effect on Hover */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/0 to-yellow-400/5 group-hover:to-yellow-400/10 transition-colors duration-500"></div>
-                          
-                          <div className="flex items-center gap-4 relative">
-                            <div className="bg-black/40 p-2.5 rounded-lg group-hover:scale-110 group-hover:bg-yellow-400/20 transition-all duration-300">
-                              <Icon className="w-6 h-6 text-yellow-400" />
-                            </div>
-                            
-                            <div className="flex flex-col">
-                              <span className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-0.5">
-                                {isEmail ? 'Drop an Email' : 'Chat on WhatsApp'}
-                              </span>
-                              <span className="text-sm sm:text-base font-bold text-white group-hover:text-yellow-400 transition-colors">
-                                {contact.label}
-                              </span>
-                            </div>
-                          </div>
+                  {/* Subtle Background Glows */}
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400/5 blur-[120px] rounded-full pointer-events-none"></div>
+                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-yellow-400/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-                          {/* Right Arrow Indicator */}
-                          <div className="hidden sm:flex text-gray-500 group-hover:text-yellow-400 group-hover:translate-x-1 transition-all duration-300">
-                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                             </svg>
-                          </div>
-                        </a>
-                      );
-                    })}
+                  <div className="relative z-10">
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">
+                        Have an <span className="text-yellow-400">Idea?</span> Let's Talk.
+                    </h3>
+                    <p className="text-gray-400 text-sm sm:text-base max-w-md mx-auto mb-8 leading-relaxed">
+                        I'm currently available for freelance work and open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+                    </p>
+                    
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                      {contactData.map((contact, index) => {
+                        const isEmail = contact.type === 'email';
+                        const Icon = getContactIcon(contact.type);
+                        
+                        return isEmail ? (
+                          <a 
+                            key={index}
+                            href={contact.url} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2.5 bg-yellow-400 hover:bg-yellow-500 text-black px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto shadow-[0_0_20px_rgba(250,204,21,0.2)]"
+                          >
+                            <Icon className="w-5 h-5" />
+                            <span>Drop an Email</span>
+                          </a>
+                        ) : (
+                          <a 
+                            key={index}
+                            href={contact.url} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+                          >
+                            <Icon className="w-5 h-5" />
+                            <span>WhatsApp Me</span>
+                          </a>
+                        );
+                      })}
+                    </div>
                   </div>
               </motion.div>
             )}
