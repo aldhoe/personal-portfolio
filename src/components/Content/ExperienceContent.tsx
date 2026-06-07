@@ -212,14 +212,14 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
           {/* Tools — flex-wrap grid */}
           <motion.div variants={itemVariants} className="mt-8">
             <h3 className="text-xl font-bold text-yellow-500 mb-6">Tools</h3>
-            <div className="flex flex-wrap gap-x-6 gap-y-8 justify-start">
+            <div className="flex flex-wrap gap-x-6 gap-y-8 justify-start items-start">
               {toolData.map((tool, index) => {
                 const iconSrc = tool.iconUrl || tool.sanityIcon || '';
                 return (
                   <motion.div 
                     key={index} 
                     variants={toolIconVariants} 
-                    className="flex flex-col items-center justify-center text-center w-16 md:w-20"
+                    className="flex flex-col items-center justify-start text-center w-16 md:w-20"
                   >
                     <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-xl overflow-hidden">
                       {iconSrc ? (
