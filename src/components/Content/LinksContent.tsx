@@ -126,7 +126,7 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
             {contactData.length > 0 && (
               <motion.div 
                   variants={itemVariants}
-                  className="space-y-6 pt-4 border-t border-white/10"
+                  className="space-y-6 mt-16"
               >
                   <div>
                     <h3 className="text-2xl font-bold text-white mb-2">
