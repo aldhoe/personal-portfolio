@@ -24,6 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   cursor: default; /* Disable text cursor globally */
+  overscroll-behavior-y: none; /* Prevent pull-to-refresh / bounce effect on mobile */
 }
 
 /* Force default cursor on all text elements so it doesn't show the I-beam, unless it's an input */
@@ -53,69 +54,71 @@ input, textarea {
   display: none;             /* Chrome, Safari, Opera */
 }
 
-/* 2. ANIMATED SCROLLBAR (scroll-hidden & scroll-visible) */
-/* Base Styling Scrollbar */
-.scroll-hidden::-webkit-scrollbar,
-.scroll-visible::-webkit-scrollbar {
-  width: 8px; /* Lebar scrollbar vertikal */
-  height: 8px; /* Lebar scrollbar horizontal */
-}
+/* 2. ANIMATED SCROLLBAR (scroll-hidden & scroll-visible) - Desktop Only */
+@media (pointer: fine) {
+  /* Base Styling Scrollbar */
+  .scroll-hidden::-webkit-scrollbar,
+  .scroll-visible::-webkit-scrollbar {
+    width: 8px; /* Lebar scrollbar vertikal */
+    height: 8px; /* Lebar scrollbar horizontal */
+  }
 
-/* Track (Area di belakang thumb) */
-.scroll-hidden::-webkit-scrollbar-track,
-.scroll-visible::-webkit-scrollbar-track {
-  background: transparent; 
-}
+  /* Track (Area di belakang thumb) */
+  .scroll-hidden::-webkit-scrollbar-track,
+  .scroll-visible::-webkit-scrollbar-track {
+    background: transparent; 
+  }
 
-/* Thumb (Indikator yang bergerak) */
-.scroll-hidden::-webkit-scrollbar-thumb,
-.scroll-visible::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.4); /* Warna thumb */
-  border-radius: 10px;
-  transition: opacity 0.5s ease-out; /* Transisi untuk fade in/out */
-}
+  /* Thumb (Indikator yang bergerak) */
+  .scroll-hidden::-webkit-scrollbar-thumb,
+  .scroll-visible::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4); /* Warna thumb */
+    border-radius: 10px;
+    transition: opacity 0.5s ease-out; /* Transisi untuk fade in/out */
+  }
 
-/* Default State (scroll-hidden): Sembunyikan thumb */
-.scroll-hidden::-webkit-scrollbar-thumb {
-  opacity: 0 !important;
-}
+  /* Default State (scroll-hidden): Sembunyikan thumb */
+  .scroll-hidden::-webkit-scrollbar-thumb {
+    opacity: 0 !important;
+  }
 
-/* Active State (scroll-visible): Tampilkan thumb saat scrolling aktif */
-.scroll-visible::-webkit-scrollbar-thumb {
-  opacity: 0.8 !important;
-  transition: opacity 0.1s ease-in; /* Cepat muncul */
-}
+  /* Active State (scroll-visible): Tampilkan thumb saat scrolling aktif */
+  .scroll-visible::-webkit-scrollbar-thumb {
+    opacity: 0.8 !important;
+    transition: opacity 0.1s ease-in; /* Cepat muncul */
+  }
 
-/* Hover state untuk thumb */
-.scroll-visible::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.6); /* Lebih terang saat hover */
-}
+  /* Hover state untuk thumb */
+  .scroll-visible::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6); /* Lebih terang saat hover */
+  }
 
-/* Fallback Firefox untuk animated scrollbar */
-.scroll-hidden {
-  scrollbar-color: transparent transparent; 
-  scrollbar-width: thin;
-}
+  /* Fallback Firefox untuk animated scrollbar */
+  .scroll-hidden {
+    scrollbar-color: transparent transparent; 
+    scrollbar-width: thin;
+  }
 
-.scroll-visible {
-  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
-  scrollbar-width: thin;
-}
+  .scroll-visible {
+    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+    scrollbar-width: thin;
+  }
 
-/* 3. CUSTOM SLIM SCROLLBAR (Yellow Theme) */
-.custom-slim-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-.custom-slim-scrollbar.scroll-visible::-webkit-scrollbar-thumb {
-  background: rgba(250, 204, 21, 0.6) !important; /* Yellow-400 */
-  border-radius: 4px;
-}
-.custom-slim-scrollbar.scroll-visible::-webkit-scrollbar-thumb:hover {
-  background: rgba(250, 204, 21, 0.9) !important;
-}
-.custom-slim-scrollbar.scroll-hidden {
-  scrollbar-color: transparent transparent; 
-}
-.custom-slim-scrollbar.scroll-visible {
-  scrollbar-color: rgba(250, 204, 21, 0.6) transparent;
+  /* 3. CUSTOM SLIM SCROLLBAR (Yellow Theme) */
+  .custom-slim-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-slim-scrollbar.scroll-visible::-webkit-scrollbar-thumb {
+    background: rgba(250, 204, 21, 0.6) !important; /* Yellow-400 */
+    border-radius: 4px;
+  }
+  .custom-slim-scrollbar.scroll-visible::-webkit-scrollbar-thumb:hover {
+    background: rgba(250, 204, 21, 0.9) !important;
+  }
+  .custom-slim-scrollbar.scroll-hidden {
+    scrollbar-color: transparent transparent; 
+  }
+  .custom-slim-scrollbar.scroll-visible {
+    scrollbar-color: rgba(250, 204, 21, 0.6) transparent;
+  }
 }
