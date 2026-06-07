@@ -107,8 +107,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
         onScroll={handleScroll}
         className={`w-full h-full overflow-y-auto mt-2 custom-slim-scrollbar ${isScrolling ? 'scroll-visible' : 'scroll-hidden'}`}
         style={{ 
-          paddingTop: '2rem', 
-          paddingBottom: '9rem',
+          paddingTop: '7rem', 
+          paddingBottom: '14rem',
           maskImage: `linear-gradient(to bottom, 
             transparent 0%, 
             black ${showTopFade ? '80px' : '0px'}, 
@@ -130,7 +130,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   const commonContentWrapper = (content: React.ReactNode) => (
     <div 
       className="w-full max-w-5xl mx-auto max-h-screen overflow-y-auto scrollbar-hide"
-      style={{ paddingTop: '2rem', paddingBottom: '9rem' }} 
+      style={{ paddingTop: '7rem', paddingBottom: '14rem' }} 
     >
       {content}
     </div>
