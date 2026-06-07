@@ -17,31 +17,22 @@ import {
   TestimonialData 
 } from '@/types/sanity';
 
+import { useData } from '@/providers/DataProvider';
+
 interface ContentContainerProps {
   activeTab: string;
   selectedProject: ProjectData | null;
   onProjectSelect: (project: ProjectData) => void;
   onProjectClose: () => void;
-  portfolioData: PortfolioCategory[];
-  portfolioLoading: boolean;
-  portfolioError: string | null;
-  siteSettings?: SiteSettings | null;
-  experiences?: ExperienceData[];
-  testimonials?: TestimonialData[];
 }
 
 const ContentContainer: React.FC<ContentContainerProps> = ({ 
   activeTab, 
   selectedProject, 
   onProjectSelect, 
-  onProjectClose,
-  portfolioData,
-  portfolioLoading,
-  portfolioError,
-  siteSettings,
-  experiences,
-  testimonials,
+  onProjectClose
 }) => {
+  const { siteSettings, experiences, testimonials, portfolioData } = useData();
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -100,7 +91,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
   }, [activeTab]);
 
   const scrollableContentWrapper = (content: React.ReactNode) => (
-    <div className="relative w-full max-w-5xl mx-auto px-4 md:px-0 h-full pt-6">
+    <div className="relative w-full max-w-5xl mx-auto h-full pt-6">
       {/* Scroll Progress Indicator */}
       <div className="absolute top-0 left-4 right-4 md:left-0 md:right-0 h-[2px] bg-white/10 rounded-full overflow-hidden z-50">
         <div 
@@ -135,7 +126,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
 
   const commonContentWrapper = (content: React.ReactNode) => (
     <div 
-      className="w-full max-w-5xl mx-auto px-4 md:px-0 max-h-screen overflow-y-auto scrollbar-hide"
+      className="w-full max-w-5xl mx-auto max-h-screen overflow-y-auto scrollbar-hide"
       style={{ paddingTop: '2rem', paddingBottom: '9rem' }} 
     >
       {content}
@@ -174,8 +165,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
           <PortfolioContent 
             onCardClick={onProjectSelect}
             data={portfolioData}
-            loading={portfolioLoading}
-            error={portfolioError}
+            loading={false}
+            error={null}
           />
         );
       case 'links':

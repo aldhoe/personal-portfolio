@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CornerRightUp, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import Image from 'next/image';
 import { ProjectData, PortfolioCategory } from '@/types/sanity';
 
 interface PortfolioContentProps {
@@ -281,12 +282,12 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
                              w-[70vw] max-w-[280px] sm:w-64 md:w-72 h-[320px] cursor-pointer" 
                   >
                     <div className="relative w-full h-full">
-                      <img 
+                      <Image 
                         src={item.imageUrl || '/mockups/placeholder.png'} 
                         alt={item.title} 
-                        loading="lazy"
-                        onError={(e) => { e.currentTarget.src = '/mockups/placeholder.png'; }}
-                        className="w-full h-full object-cover transition-transform duration-500 scale-110 group-hover:scale-100" 
+                        fill
+                        sizes="(max-width: 768px) 70vw, (max-width: 1200px) 300px, 300px"
+                        className="object-cover transition-transform duration-500 scale-110 group-hover:scale-100" 
                       />
                       
                       <div className="absolute inset-0 z-10 bg-black/20 transition-opacity duration-500 group-hover:opacity-0" />

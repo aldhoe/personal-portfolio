@@ -6,6 +6,7 @@ import { ArrowLeft, ExternalLink, Play, Wrench, ZoomIn } from 'lucide-react';
 import { ProjectData } from '@/types/sanity';
 import ImageLightbox from '@/components/ui/ImageLightbox';
 import { PortableText } from '@portabletext/react';
+import Image from 'next/image';
 
 interface ProjectDetailProps {
   project: ProjectData;
@@ -112,15 +113,15 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) =
           ) : activeMedia?.src ? (
             /* Clickable image with zoom hint */
             <div 
-              className="relative flex items-center justify-center cursor-zoom-in group/zoom"
+              className="relative flex items-center justify-center cursor-zoom-in group/zoom h-[40vh] md:h-[60vh] w-full"
               onClick={handleImageClick}
             >
-              <img 
+              <Image 
                 src={activeMedia.src} 
                 alt={activeMedia.caption || project.title} 
-                className="max-w-full max-h-[60vh] md:max-h-[500px] w-auto h-auto rounded-xl 
-                           transition-transform duration-300 group-hover/zoom:scale-[1.02]"
-                loading="lazy"
+                fill
+                sizes="(max-width: 1024px) 100vw, 1024px"
+                className="object-contain transition-transform duration-300 group-hover/zoom:scale-[1.02]"
               />
               {/* Zoom indicator — appears on hover */}
               <div className="absolute inset-0 flex items-center justify-center 
@@ -152,11 +153,12 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) =
                     <Play className="w-6 h-6 text-yellow-400 fill-yellow-400" />
                   </div>
                 ) : (
-                  <img 
+                  <Image 
                     src={item.src} 
                     alt={item.caption || `Media ${index + 1}`}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
+                    fill
+                    sizes="80px"
+                    className="object-cover"
                   />
                 )}
               </button>

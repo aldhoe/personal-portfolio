@@ -1,298 +1,122 @@
-'use client';
-
-import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import NavigationMenu from '@/components/Home/NavigationMenu';
-import TabNavigation from '@/components/Home/TabNavigation';
-import ContentContainer from '@/components/ContentContainer';
-import { motion, AnimatePresence } from 'framer-motion'; 
+import React from 'react';
 import { client } from '@/lib/sanity';
-import { 
-  ProjectData, 
-  PortfolioCategory, 
-  SiteSettings, 
-  ExperienceData, 
-  TestimonialData 
-} from '@/types/sanity';
+import ClientPageManager from '@/components/ClientPageManager';
+import { DataProvider } from '@/providers/DataProvider';
+import { ProjectData } from '@/types/sanity';
 
-export default function HomePage() {
-  const [activeTab, setActiveTab] = useState('home');
-  const profileImageUrl = '/images/profile-dark-bg.jpg'; 
-  
-  const isHome = activeTab === 'home';
-  const isBlurTarget = activeTab !== 'home' && activeTab !== 'links';
-  const [isBlurActive, setIsBlurActive] = useState(isBlurTarget); 
-  
-  // Project detail state
-  const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-  // ============================
-  // CMS DATA STATE
-  // ============================
-  const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
-  const [experiences, setExperiences] = useState<ExperienceData[]>([]);
-  const [testimonials, setTestimonials] = useState<TestimonialData[]>([]);
-  const [cmsReady, setCmsReady] = useState(false);
+export default async function HomePage({ searchParams }: PageProps) {
+  // Await searchParams as required in Next.js 15
+  const params = await searchParams;
+  const projectSlug = typeof params.project === 'string' ? params.project : null;
 
-  // Portfolio data caching
-  const [portfolioData, setPortfolioData] = useState<PortfolioCategory[]>([]);
-  const [portfolioLoading, setPortfolioLoading] = useState(true);
-  const [portfolioError, setPortfolioError] = useState<string | null>(null);
-  const portfolioFetched = useRef(false);
+  // We set cache tags and revalidate options
+  const fetchOptions = { next: { revalidate: 60, tags: ['sanity'] } };
 
-  // ============================
-  // FETCH CMS DATA ON MOUNT
-  // ============================
-  useEffect(() => {
-    fetchCmsData();
-    // Safety: if CMS takes too long, reveal content anyway after 3s
-    const safetyTimer = setTimeout(() => setCmsReady(true), 3000);
-    return () => clearTimeout(safetyTimer);
-  }, []);
-
-  const fetchCmsData = async () => {
-    try {
-      const [settings, exps, tests] = await Promise.all([
-        // Site Settings (singleton)
-        client.fetch(`*[_type == "siteSettings"][0] {
-          name,
-          jobTitle,
-          isOpenToWork,
-          profileImageUrl,
-          "cvFileUrl": cvFile.asset->url,
-          contactInfo[] {
-            type,
-            label,
-            url
-          },
-          summaryParagraphs,
-          summaryQuote,
-          skills,
-          tools[] {
-            name,
-            iconUrl,
-            "sanityIcon": icon.asset->url
-          },
-          socialLinks[] {
-            name,
-            iconUrl,
-            "sanityIcon": icon.asset->url,
-            url,
-            bgColor
-          }
-        }`),
-        // Experience entries
-        client.fetch(`*[_type == "experience"] | order(order asc) {
-          jobTitle,
-          company,
-          startYear,
-          endYear,
-          description,
-          responsibilities,
-          order
-        }`),
-        // Testimonials
-        client.fetch(`*[_type == "testimonial"] | order(order asc) {
-          name,
-          role,
-          content,
-          avatarUrl,
-          "avatarSanity": avatar.asset->url,
-          rating,
-          order
-        }`),
-      ]);
-
-      if (settings) setSiteSettings(settings);
-      if (exps) setExperiences(exps);
-      if (tests) {
-        // Merge avatar sources
-        const mergedTests = tests.map((t: any) => ({
-          ...t,
-          avatarUrl: t.avatarUrl || t.avatarSanity || undefined,
-        }));
-        setTestimonials(mergedTests);
+  // Fetch all CMS data server-side
+  const [settings, experiences, testimonials, portfolioData] = await Promise.all([
+    client.fetch(`*[_type == "siteSettings"][0] {
+      name,
+      jobTitle,
+      isOpenToWork,
+      profileImageUrl,
+      "cvFileUrl": cvFile.asset->url,
+      contactInfo[] {
+        type,
+        label,
+        url
+      },
+      summaryParagraphs,
+      summaryQuote,
+      skills,
+      tools[] {
+        name,
+        iconUrl,
+        "sanityIcon": icon.asset->url
+      },
+      socialLinks[] {
+        name,
+        iconUrl,
+        "sanityIcon": icon.asset->url,
+        url,
+        bgColor
       }
-      setCmsReady(true);
-    } catch (err) {
-      console.error('Error fetching CMS data:', err);
-      setCmsReady(true); // Reveal content even on error — components use fallback data
-    }
-  };
+    }`, {}, fetchOptions),
 
-  // ============================
-  // PORTFOLIO DATA FETCH (Cached)
-  // ============================
-  useEffect(() => {
-    if (activeTab === 'portfolio' && !portfolioFetched.current) {
-      fetchPortfolioData();
-    }
-  }, [activeTab]);
+    client.fetch(`*[_type == "experience"] | order(order asc) {
+      jobTitle,
+      company,
+      startYear,
+      endYear,
+      description,
+      responsibilities,
+      order
+    }`, {}, fetchOptions),
 
-  const fetchPortfolioData = async () => {
-    try {
-      setPortfolioLoading(true);
-      const query = `*[_type == "portfolioCategory"] | order(order asc) {
-        category,
-        "items": items[]-> {
-          title,
-          slug,
-          description,
-          subtitle,
-          toolsUsed,
-          "imageUrl": imageUrl.asset->url,
-          coverCaption,
-          videoUrl,
-          liveLink,
-          type,
-          "images": galleryImages[] {
-            "imageUrl": imageUrl,
-            "sanityImage": image.asset->url,
-            caption
-          }
-        }
-      }`;
-      
-      const [data] = await Promise.all([
-        client.fetch(query),
-        new Promise(resolve => setTimeout(resolve, 800))
-      ]);
-      
-      setPortfolioData(data);
-      portfolioFetched.current = true;
-      setPortfolioLoading(false);
-    } catch (err) {
-      console.error('Error fetching portfolio data:', err);
-      setPortfolioError('Failed to load portfolio data');
-      setPortfolioLoading(false);
-    }
-  };
+    client.fetch(`*[_type == "testimonial"] | order(order asc) {
+      name,
+      role,
+      content,
+      avatarUrl,
+      "avatarSanity": avatar.asset->url,
+      rating,
+      order
+    }`, {}, fetchOptions),
 
-  const handleTabChange = (tabId: string) => {
-    setSelectedProject(null);
-    window.history.pushState({}, '', window.location.pathname); // Clear URL params
-    setActiveTab(tabId);
-  };
-  
-  const handleProjectClose = () => {
-    setSelectedProject(null);
-    window.history.pushState({}, '', window.location.pathname); // Clear URL params
-  };
-
-  const handleProjectSelect = (project: ProjectData) => {
-    setSelectedProject(project);
-    if (project.slug?.current) {
-      window.history.pushState({}, '', `?project=${project.slug.current}`);
-    }
-  };
-  
-  useEffect(() => {
-    setIsBlurActive(isBlurTarget || selectedProject !== null); 
-  }, [isBlurTarget, selectedProject]);
-
-  // Deep linking: check URL for project on load
-  useEffect(() => {
-    if (portfolioData.length > 0) {
-      const params = new URLSearchParams(window.location.search);
-      const projectSlug = params.get('project');
-      
-      if (projectSlug) {
-        // Find the project across all categories
-        let foundProject: ProjectData | null = null;
-        for (const cat of portfolioData) {
-          const match = cat.items.find(p => p.slug?.current === projectSlug);
-          if (match) {
-            foundProject = match;
-            break;
-          }
-        }
-        
-        if (foundProject) {
-          setActiveTab('portfolio');
-          setSelectedProject(foundProject);
+    client.fetch(`*[_type == "portfolioCategory"] | order(order asc) {
+      category,
+      "items": items[]-> {
+        title,
+        slug,
+        description,
+        subtitle,
+        toolsUsed,
+        "imageUrl": imageUrl.asset->url,
+        coverCaption,
+        videoUrl,
+        liveLink,
+        type,
+        "images": galleryImages[] {
+          "imageUrl": imageUrl,
+          "sanityImage": image.asset->url,
+          caption
         }
       }
-    }
-  }, [portfolioData]);
+    }`, {}, fetchOptions)
+  ]);
 
-  const showTabNavigation = selectedProject === null;
+  // Merge avatar sources for testimonials
+  const mergedTestimonials = (testimonials || []).map((t: any) => ({
+    ...t,
+    avatarUrl: t.avatarUrl || t.avatarSanity || undefined,
+  }));
+
+  // Find the initial project if deep linked via URL
+  let initialProject: ProjectData | null = null;
+  if (projectSlug && portfolioData) {
+    for (const cat of portfolioData) {
+      const match = cat.items?.find((p: ProjectData) => p.slug?.current === projectSlug);
+      if (match) {
+        initialProject = match;
+        break;
+      }
+    }
+  }
+
+  // Compile data for context
+  const initialData = {
+    siteSettings: settings || null,
+    experiences: experiences || [],
+    testimonials: mergedTestimonials,
+    portfolioData: portfolioData || []
+  };
 
   return (
-    <main className="min-h-screen relative overflow-hidden flex flex-col bg-black"> 
-      
-      {/* Initial Load Overlay — stays visible until CMS data is ready */}
-      <motion.div
-        initial={{ opacity: 1 }}
-        animate={{ opacity: cmsReady ? 0 : 1, pointerEvents: cmsReady ? 'none' : 'auto' }}
-        transition={{ duration: 1, ease: "easeInOut" }}
-        className="fixed inset-0 bg-black z-40"
-      />
-
-      <NavigationMenu activeTab={activeTab} cvUrl={siteSettings?.cvFileUrl} />
-
-      {/* Background Image + Gradients */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={profileImageUrl}
-          alt="Renaldo Dasilva Profile"
-          fill 
-          quality={85}
-          priority
-          className="object-cover opacity-70" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-orange-900/40"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent"></div>
-
-        {/* Blur Overlay */}
-        <AnimatePresence>
-          {isBlurActive && ( 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, ease: "easeInOut" }} 
-              className="absolute inset-0 z-0 bg-black/10 backdrop-blur-xl pointer-events-none"
-            />
-          )}
-        </AnimatePresence>
-      </div>
-      
-      {/* Main Content */}
-      <div className="relative z-10 flex-grow 
-          flex items-center justify-start 
-          px-6 sm:px-10 md:px-24 lg:px-32 py-20 
-        "
-      >
-        <ContentContainer 
-          activeTab={activeTab} 
-          selectedProject={selectedProject} 
-          onProjectSelect={handleProjectSelect}
-          onProjectClose={handleProjectClose}
-          portfolioData={portfolioData}
-          portfolioLoading={portfolioLoading}
-          portfolioError={portfolioError}
-          siteSettings={siteSettings}
-          experiences={experiences}
-          testimonials={testimonials}
-        />
-      </div>
-      
-      {/* Tab Navigation */}
-      <AnimatePresence initial={false}>
-        {showTabNavigation && (
-          <motion.div
-            key="tab-nav"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-          >
-            <TabNavigation 
-              activeTab={activeTab} 
-              onTabChange={handleTabChange} 
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </main>
+    <DataProvider initialData={initialData}>
+      <ClientPageManager initialProject={initialProject} />
+    </DataProvider>
   );
 }
