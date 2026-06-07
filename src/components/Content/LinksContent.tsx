@@ -126,19 +126,36 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                       Direct Contact
                   </h3>
                   
-                  {contactData.map((contact, index) => {
-                    const Icon = getContactIcon(contact.type);
-                    return (
-                      <a 
-                        key={index}
-                        href={contact.url} 
-                        className="flex items-center space-x-3 text-lg font-semibold text-gray-200 hover:text-yellow-400 transition-colors"
-                      >
-                        <Icon className="w-5 h-5 text-yellow-400" />
-                        <span>{contact.label}</span>
-                      </a>
-                    );
-                  })}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    {contactData.map((contact, index) => {
+                      const Icon = getContactIcon(contact.type);
+                      const isEmail = contact.type === 'email';
+                      
+                      return (
+                        <a 
+                          key={index}
+                          href={contact.url} 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group relative flex flex-col items-start p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-yellow-400/50 hover:bg-white/10 transition-all duration-300 overflow-hidden"
+                        >
+                          {/* Background Glow Effect on Hover */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/0 via-yellow-400/0 to-yellow-400/0 group-hover:to-yellow-400/10 transition-colors duration-500"></div>
+                          
+                          <div className="relative bg-black/40 p-3 rounded-xl mb-4 group-hover:scale-110 group-hover:bg-yellow-400/20 transition-all duration-300">
+                            <Icon className="w-6 h-6 text-yellow-400" />
+                          </div>
+                          
+                          <h4 className="relative text-xs text-gray-400 uppercase tracking-widest font-semibold mb-1">
+                            {isEmail ? 'Drop an Email' : 'Chat with Me'}
+                          </h4>
+                          <span className="relative text-sm sm:text-base font-bold text-white group-hover:text-yellow-400 transition-colors break-all">
+                            {contact.label}
+                          </span>
+                        </a>
+                      );
+                    })}
+                  </div>
               </motion.div>
             )}
 
