@@ -92,8 +92,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
 
   const scrollableContentWrapper = (content: React.ReactNode) => (
     <div className="relative w-full max-w-5xl mx-auto h-full pt-6">
-      {/* Scroll Progress Indicator */}
-      <div className="absolute top-0 left-4 right-4 md:left-0 md:right-0 h-[2px] bg-white/10 rounded-full overflow-hidden z-50">
+      {/* Scroll Progress Indicator - Edge-to-Edge on Desktop, Hidden on Mobile */}
+      <div className="fixed top-0 left-0 right-0 h-[2px] bg-white/10 z-[100] hidden md:block">
         <div 
           className="h-full bg-yellow-400 transition-all duration-150 ease-out"
           style={{ width: `${scrollProgress}%` }}
