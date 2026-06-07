@@ -219,9 +219,9 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
                   <motion.div 
                     key={index} 
                     variants={toolIconVariants} 
-                    className="flex flex-col items-center justify-start text-center w-16 md:w-20"
+                    className="flex flex-col items-center justify-start text-center w-16 md:w-16"
                   >
-                    <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-xl overflow-hidden">
+                    <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl overflow-hidden">
                       {iconSrc ? (
                         <img 
                           src={iconSrc} 
