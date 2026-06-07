@@ -221,18 +221,20 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
                     variants={toolIconVariants} 
                     className="flex flex-col items-center justify-center text-center w-16 md:w-20"
                   >
-                    {iconSrc ? (
-                      <img 
-                        src={iconSrc} 
-                        alt={tool.name} 
-                        loading="lazy"
-                        className="w-12 h-12 md:w-16 md:h-16 object-contain" 
-                      />
-                    ) : (
-                      <div className="w-12 h-12 md:w-16 md:h-16 bg-white/10 rounded-xl flex items-center justify-center">
-                        <span className="text-2xl font-bold text-yellow-400">{tool.name.charAt(0)}</span>
-                      </div>
-                    )}
+                    <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-xl overflow-hidden">
+                      {iconSrc ? (
+                        <img 
+                          src={iconSrc} 
+                          alt={tool.name} 
+                          loading="lazy"
+                          className="w-full h-full object-cover" 
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-white/10 flex items-center justify-center">
+                          <span className="text-2xl font-bold text-yellow-400">{tool.name.charAt(0)}</span>
+                        </div>
+                      )}
+                    </div>
                     <span className="text-sm font-bold text-white mt-2">{tool.name}</span>
                   </motion.div>
                 );
