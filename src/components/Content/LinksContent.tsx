@@ -93,7 +93,7 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo })
                             href={link.url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className={`group w-16 h-16 flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 hover:scale-110 ${
+                            className={`group w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-xl overflow-hidden transition-all duration-300 hover:scale-110 ${
                               link.bgColor || ''
                             }`}
                             aria-label={link.name}
