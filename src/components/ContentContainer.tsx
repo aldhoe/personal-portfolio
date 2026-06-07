@@ -2,7 +2,6 @@
 
 import React, { useRef, useState, useEffect } from 'react'; 
 import { AnimatePresence, motion } from 'framer-motion';
-import PullToRefresh from 'react-simple-pull-to-refresh';
 import Image from 'next/image';
 import HeroSection from './Home/HeroSection'; 
 import { SummaryContent } from './Content/SummaryContent'; 
@@ -88,12 +87,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }
-    };
   }, [activeTab]);
-
-  const handleRefresh = async () => {
-    window.location.reload();
-  };
 
   const scrollableContentWrapper = (content: React.ReactNode) => (
     <>
@@ -105,7 +99,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
         />
       </div>
 
-      <div className="relative w-full max-w-5xl mx-auto h-full pt-6">
+      <div className="relative w-full h-full pt-6">
 
       <div 
         ref={scrollRef}
@@ -126,13 +120,9 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
             transparent 100%)`
         }}
       >
-        <PullToRefresh 
-          onRefresh={handleRefresh} 
-          pullingContent={''} // We can leave pulling content default or empty
-          backgroundColor="transparent"
-        >
+        <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 md:px-24 lg:px-32">
           {content}
-        </PullToRefresh>
+        </div>
       </div>
     </div>
     </>
@@ -140,16 +130,12 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
 
   const commonContentWrapper = (content: React.ReactNode) => (
     <div 
-      className="w-full max-w-5xl mx-auto max-h-screen overflow-y-auto scrollbar-hide"
+      className="w-full max-h-screen overflow-y-auto scrollbar-hide"
       style={{ paddingTop: '7rem', paddingBottom: '14rem' }} 
     >
-      <PullToRefresh 
-        onRefresh={handleRefresh} 
-        pullingContent={''}
-        backgroundColor="transparent"
-      >
+      <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 md:px-24 lg:px-32">
         {content}
-      </PullToRefresh>
+      </div>
     </div>
   );
 
