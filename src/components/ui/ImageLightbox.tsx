@@ -128,9 +128,12 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({
               <div className="w-full h-full flex-1 relative flex items-center justify-center overflow-hidden">
                 <TransformWrapper
                   initialScale={1}
-                  minScale={0.5}
+                  minScale={1}
                   maxScale={5}
                   centerOnInit={true}
+                  centerZoomedOut={true}
+                  limitToBounds={true}
+                  alignmentAnimation={{ animationTime: 200, animationType: "easeOut" }}
                   wheel={{ 
                     step: 0.1,
                     smoothStep: 0.005,
