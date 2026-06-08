@@ -270,7 +270,7 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
       </div>
 
       {/* ========== LANGUAGES ========== */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mt-20 md:mt-24 pt-10 border-t border-gray-800/50">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mt-20 md:mt-24 pt-4">
         <motion.div variants={itemVariants} className="md:col-span-1">
           <h2 className="text-3xl font-extrabold text-white tracking-wide mb-2 uppercase">
             Languages
@@ -284,10 +284,10 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
               <motion.div 
                 key={index}
                 variants={itemVariants}
-                className="flex justify-between items-center border-b border-gray-800/50 pb-4"
+                className="flex justify-between items-center pb-2"
               >
-                <span className="text-xl font-bold text-white">{lang.name}</span>
-                <span className="px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 rounded-full">
+                <span className="text-base font-bold text-white">{lang.name}</span>
+                <span className="px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 rounded-full">
                   {lang.proficiencyLevel}
                 </span>
               </motion.div>
@@ -297,7 +297,7 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
       </div>
 
       {/* ========== EDUCATION & CERTIFICATES ========== */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mt-20 md:mt-24 pt-10 border-t border-gray-800/50">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mt-20 md:mt-24 pt-4">
         <motion.div variants={itemVariants} className="md:col-span-1">
           <h2 className="text-3xl font-extrabold text-white tracking-wide mb-2 uppercase">
             Education
@@ -310,12 +310,12 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
             <motion.div 
               key={index}
               variants={itemVariants} 
-              className={`relative pb-10 border-l border-gray-700 pl-4 md:pl-6 ${index > 0 ? 'mt-4' : ''}`}
+              className={`relative pb-8 pl-5 md:pl-6 ${index > 0 ? 'mt-4' : ''}`}
             >
-              <div className="absolute -left-1.5 top-2 w-3 h-3 bg-yellow-400 rounded-full"></div>
-              <h4 className="text-xl sm:text-2xl font-bold text-white mb-1.5">{edu.institution}</h4>
-              <p className="text-base text-yellow-400">
-                {edu.degree} <span className="text-gray-400 font-normal ml-2">— {edu.year}</span>
+              <div className="absolute left-0 top-2.5 w-2 h-2 bg-yellow-400 rounded-full"></div>
+              <h4 className="text-lg sm:text-xl font-bold text-white mb-1">{edu.institution}</h4>
+              <p className="text-sm sm:text-base text-yellow-400">
+                {edu.degree} <span className="text-gray-400 font-normal ml-1">— {edu.year}</span>
               </p>
             </motion.div>
           ))}
