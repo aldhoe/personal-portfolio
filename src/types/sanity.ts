@@ -5,6 +5,7 @@
 export interface GalleryImage {
   imageUrl?: string;       // External URL (hemat storage)
   sanityImage?: string;    // Sanity-hosted image URL
+  lqip?: string;           // Low Quality Image Placeholder
   caption?: string;
 }
 
@@ -15,6 +16,7 @@ export interface ProjectData {
   subtitle: string;
   toolsUsed?: string[];    // Tools/tech used — shown as tags
   imageUrl: string;
+  lqip?: string;           // Blur placeholder
   coverCaption?: string;   // Description shown only in lightbox zoom
   images?: GalleryImage[]; // Multi-image gallery
   videoUrl?: string;       // YouTube/Vimeo embed URL

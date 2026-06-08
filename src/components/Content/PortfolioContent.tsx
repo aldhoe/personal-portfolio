@@ -286,6 +286,9 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
                         fill
                         sizes="(max-width: 768px) 70vw, (max-width: 1200px) 300px, 300px"
                         className="object-cover transition-transform duration-500 scale-110 group-hover:scale-100" 
+                        priority={itemIndex < 3}
+                        placeholder={item.lqip ? 'blur' : 'empty'}
+                        blurDataURL={item.lqip || undefined}
                       />
                       
                       <div className="absolute inset-0 z-10 bg-black/20 transition-opacity duration-500 group-hover:opacity-0" />

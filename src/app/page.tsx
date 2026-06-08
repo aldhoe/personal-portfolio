@@ -77,6 +77,7 @@ export default async function HomePage({ searchParams }: PageProps) {
         subtitle,
         toolsUsed,
         "imageUrl": imageUrl.asset->url,
+        "lqip": imageUrl.asset->metadata.lqip,
         coverCaption,
         videoUrl,
         liveLink,
@@ -84,6 +85,7 @@ export default async function HomePage({ searchParams }: PageProps) {
         "images": galleryImages[] {
           "imageUrl": imageUrl,
           "sanityImage": image.asset->url,
+          "lqip": image.asset->metadata.lqip,
           caption
         }
       }

@@ -33,17 +33,17 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose, onP
 
   // Collect all media items
   const mediaItems = useMemo(() => {
-    const items: { type: 'image' | 'video'; src: string; caption?: string; embedUrl?: string }[] = [];
+    const items: { type: 'image' | 'video'; src: string; caption?: string; embedUrl?: string; lqip?: string }[] = [];
     
     if (project.imageUrl) {
-      items.push({ type: 'image', src: project.imageUrl, caption: project.coverCaption });
+      items.push({ type: 'image', src: project.imageUrl, caption: project.coverCaption, lqip: project.lqip });
     }
     
     if (project.images && project.images.length > 0) {
       project.images.forEach(img => {
         const src = img.imageUrl || img.sanityImage || '';
         if (src) {
-          items.push({ type: 'image', src, caption: img.caption });
+          items.push({ type: 'image', src, caption: img.caption, lqip: img.lqip });
         }
       });
     }
@@ -160,6 +160,9 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose, onP
                   fill
                   sizes="(max-width: 1024px) 100vw, 1024px"
                   className="object-contain transition-transform duration-300 hover:scale-[1.02]"
+                  priority
+                  placeholder={activeMedia.lqip ? 'blur' : 'empty'}
+                  blurDataURL={activeMedia.lqip || undefined}
                 />
               </div>
 
