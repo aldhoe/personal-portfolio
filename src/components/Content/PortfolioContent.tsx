@@ -314,9 +314,9 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
                 ))}
               </div>
 
-              {/* Mobile Pagination Dots */}
+              {/* Pagination Dots */}
               {category.items.length > 1 && (
-                <div className="flex md:hidden items-center justify-center gap-1.5 mt-4">
+                <div className="flex items-center justify-center gap-1.5 mt-4">
                   {category.items.map((_, dotIndex) => (
                     <div 
                       key={dotIndex}
