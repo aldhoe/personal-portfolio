@@ -128,10 +128,14 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({
                 <TransformWrapper
                   initialScale={1}
                   minScale={0.5}
-                  maxScale={4}
+                  maxScale={5}
                   centerOnInit={true}
-                  wheel={{ step: 0.1 }}
-                  doubleClick={{ step: 0.5 }}
+                  wheel={{ 
+                    step: 0.1,
+                    smoothStep: 0.005,
+                  }}
+                  doubleClick={{ step: 1 }}
+                  panning={{ velocityDisabled: false }}
                 >
                   <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
                     <img
