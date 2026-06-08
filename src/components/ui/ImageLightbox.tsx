@@ -2,7 +2,8 @@
 
 import React, { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 interface ImageLightboxProps {
   isOpen: boolean;
@@ -112,7 +113,7 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({
             </button>
           )}
 
-          {/* Image */}
+          {/* Image with Zoom/Pan */}
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
@@ -120,21 +121,48 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="relative z-[105] px-4 md:px-16 py-16 max-w-full max-h-full flex items-center justify-center"
+              className="relative z-[105] w-full h-full flex flex-col items-center justify-center overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
-                src={current.src}
-                alt={current.caption || 'Zoomed image'}
-                className="max-w-[90vw] max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
-                draggable={false}
-              />
+              <div className="w-full h-full flex-1 relative flex items-center justify-center overflow-hidden">
+                <TransformWrapper
+                  initialScale={1}
+                  minScale={0.5}
+                  maxScale={4}
+                  centerOnInit={true}
+                  wheel={{ step: 0.1 }}
+                  doubleClick={{ step: 0.5 }}
+                >
+                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
+                    <img
+                      src={current.src}
+                      alt={current.caption || 'Zoomed image'}
+                      className="max-w-[95vw] max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl cursor-grab active:cursor-grabbing"
+                      draggable={false}
+                    />
+                  </TransformComponent>
+                </TransformWrapper>
+              </div>
               
+              {/* Zoom Hint (Fades out) */}
+              <motion.div
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                transition={{ delay: 2.5, duration: 1 }}
+                className="absolute bottom-20 md:bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-2 
+                           text-white/60 text-xs md:text-sm font-medium bg-black/40 backdrop-blur-sm 
+                           px-4 py-2 rounded-full pointer-events-none z-[115]"
+              >
+                <ZoomIn className="w-4 h-4" />
+                <span className="hidden md:inline">Scroll to zoom, drag to pan</span>
+                <span className="md:hidden">Pinch to zoom, drag to pan</span>
+              </motion.div>
+
               {/* Caption */}
               {current.caption && (
-                <p className="absolute bottom-4 left-1/2 -translate-x-1/2 
+                <p className="absolute bottom-6 md:bottom-4 left-1/2 -translate-x-1/2 
                               text-white/60 text-sm font-medium bg-black/40 backdrop-blur-sm 
-                              px-3 py-1 rounded-full whitespace-nowrap">
+                              px-3 py-1 rounded-full whitespace-nowrap z-[115]">
                   {current.caption}
                 </p>
               )}
