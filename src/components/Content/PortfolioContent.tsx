@@ -272,7 +272,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
                     viewport={{ once: true, amount: 0.01, margin: "0px 100px 0px 0px" }}
                     transition={{ 
                       duration: 0.4, 
-                      delay: itemIndex * 0.1,
+                      delay: itemIndex < 3 ? 0 : (itemIndex - 2) * 0.1,
                       ease: "easeOut" 
                     }}
                     className="group relative flex-shrink-0 snap-start rounded-2xl overflow-hidden shadow-xl 
