@@ -275,9 +275,9 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
                       delay: itemIndex * 0.1,
                       ease: "easeOut" 
                     }}
-                    className="group relative flex-shrink-0 snap-center rounded-2xl overflow-hidden shadow-xl 
+                    className="group relative flex-shrink-0 snap-start rounded-2xl overflow-hidden shadow-xl 
                              bg-neutral-900/80 hover:bg-neutral-800/90 transition duration-300
-                             w-[70vw] max-w-[280px] sm:w-64 md:w-72 h-[320px] cursor-pointer" 
+                             w-[70vw] max-w-[280px] sm:w-64 md:w-[340px] h-[320px] md:h-[360px] cursor-pointer" 
                   >
                     <div className="relative w-full h-full">
                       <Image 
