@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
@@ -22,6 +22,7 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({
 }) => {
   const hasMultiple = images.length > 1;
   const current = images[currentIndex];
+  const [isDragging, setIsDragging] = useState(false);
 
   // Keyboard navigation
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -136,8 +137,16 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({
                   }}
                   doubleClick={{ step: 1 }}
                   panning={{ velocityDisabled: false }}
+                  onPanningStart={() => setIsDragging(true)}
+                  onPanningStop={() => setIsDragging(false)}
+                  onPinchingStart={() => setIsDragging(true)}
+                  onPinchingStop={() => setIsDragging(false)}
                 >
-                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full flex items-center justify-center">
+                  <TransformComponent 
+                    wrapperClass="!w-full !h-full" 
+                    contentClass="!w-full !h-full flex items-center justify-center"
+                    contentStyle={{ transition: isDragging ? 'none' : 'transform 0.15s ease-out' }}
+                  >
                     <img
                       src={current.src}
                       alt={current.caption || 'Zoomed image'}
