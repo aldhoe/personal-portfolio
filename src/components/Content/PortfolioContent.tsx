@@ -259,12 +259,6 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
                 </button>
               )}
 
-              {/* Gradient Mask Effect for Visual Cue */}
-              <div 
-                className="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none transition-opacity duration-500"
-                style={{ opacity: scrollStates[categoryIndex]?.canScrollRight ? 1 : 0 }}
-              />
-
               <div 
                 ref={(el) => { scrollContainerRefs.current[categoryIndex] = el; }}
                 className="flex overflow-x-auto space-x-6 pb-4 pt-1 snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0"
