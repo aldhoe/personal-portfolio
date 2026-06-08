@@ -218,7 +218,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
       {/* CONTENT LAYER — Transitions between tabs and detail view */}
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
-          key={selectedProject ? 'detail-view' : activeTab} 
+          key={selectedProject ? `detail-${selectedProject.slug.current}` : activeTab} 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { duration: 0.15 } }}
           exit={{ opacity: 0, transition: { duration: 0.1 } }}
@@ -230,7 +230,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
           `}
         >
           {selectedProject 
-            ? <ProjectDetailView project={selectedProject} onClose={onProjectClose} />
+            ? <ProjectDetailView project={selectedProject} onClose={onProjectClose} onProjectSelect={onProjectSelect} />
             : renderTabContent()
           }
         </motion.div>

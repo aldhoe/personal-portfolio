@@ -7,10 +7,12 @@ import { ProjectData } from '@/types/sanity';
 import ImageLightbox from '@/components/ui/ImageLightbox';
 import { PortableText } from '@portabletext/react';
 import Image from 'next/image';
+import { useData } from '@/providers/DataProvider';
 
 interface ProjectDetailProps {
   project: ProjectData;
   onClose: () => void;
+  onProjectSelect: (project: ProjectData) => void;
 }
 
 // Extract YouTube/Vimeo embed URL
@@ -26,7 +28,9 @@ function getEmbedUrl(url: string): string | null {
   return null;
 }
 
-const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) => {
+const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose, onProjectSelect }) => {
+  const { portfolioData } = useData();
+
   // Collect all media items
   const mediaItems = useMemo(() => {
     const items: { type: 'image' | 'video'; src: string; caption?: string; embedUrl?: string }[] = [];
@@ -80,6 +84,21 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) =
     setLightboxOpen(true);
   };
   
+  // Get random projects (excluding the current one)
+  const relatedProjects = useMemo(() => {
+    if (!portfolioData) return [];
+    
+    // Flatten all projects from all categories
+    const allProjects = portfolioData.flatMap(cat => cat.items);
+    
+    // Filter out current project
+    const others = allProjects.filter(p => p.slug.current !== project.slug.current);
+    
+    // Shuffle and pick 2 projects
+    const shuffled = [...others].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 2);
+  }, [portfolioData, project]);
+
   return (
     <>
       <motion.div
@@ -247,6 +266,41 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose }) =
                   Watch Video
                 </a>
               )}
+            </div>
+          )}
+
+          {/* Related Projects / Infinite Discovery */}
+          {relatedProjects.length > 0 && (
+            <div className="pt-12 mt-12 border-t border-white/10">
+              <h4 className="text-lg md:text-xl font-bold text-yellow-400 mb-6 uppercase tracking-wider">
+                Explore More Projects
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {relatedProjects.map((rp, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => onProjectSelect(rp)}
+                    className="group relative text-left rounded-2xl overflow-hidden aspect-[16/10] bg-neutral-900 border border-white/5 hover:border-yellow-400/50 transition-all duration-300 shadow-lg block"
+                  >
+                    <Image
+                      src={rp.imageUrl}
+                      alt={rp.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-60 group-hover:opacity-100"
+                    />
+                    {/* Gradient Overlay for Text Readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-5">
+                      <span className="text-yellow-400 text-[10px] font-bold uppercase tracking-widest mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                        View Project
+                      </span>
+                      <h5 className="text-white font-bold text-lg md:text-xl leading-tight group-hover:text-yellow-400 transition-colors drop-shadow-md">
+                        {rp.title}
+                      </h5>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
           
