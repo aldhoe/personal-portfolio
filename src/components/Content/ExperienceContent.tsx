@@ -10,6 +10,7 @@ interface ExperienceContentProps {
   skills?: string[];
   tools?: ToolItem[];
   languages?: LanguageItem[];
+  showEducation?: boolean;
   education?: EducationItem[];
   testimonials?: TestimonialData[];
 }
@@ -129,6 +130,7 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
   skills,
   tools,
   languages,
+  showEducation = true,
   education,
   testimonials,
 }) => {
@@ -297,30 +299,32 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
       </div>
 
       {/* ========== EDUCATION & CERTIFICATES ========== */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mt-20 md:mt-24 pt-4">
-        <motion.div variants={itemVariants} className="md:col-span-1">
-          <h2 className="text-3xl font-extrabold text-white tracking-wide mb-2 uppercase">
-            Education
-          </h2>
-          <div className="w-12 h-1 bg-yellow-500 mt-2 rounded-full"></div>
-        </motion.div>
-        
-        <div className="md:col-span-2 text-gray-200">
-          {eduData.map((edu, index) => (
-            <motion.div 
-              key={index}
-              variants={itemVariants} 
-              className={`relative pb-8 pl-5 md:pl-6 ${index > 0 ? 'mt-4' : ''}`}
-            >
-              <div className="absolute left-0 top-2.5 w-2 h-2 bg-yellow-400 rounded-full"></div>
-              <h4 className="text-lg sm:text-xl font-bold text-white mb-1">{edu.institution}</h4>
-              <p className="text-sm sm:text-base text-yellow-400">
-                {edu.degree} <span className="text-gray-400 font-normal ml-1">— {edu.year}</span>
-              </p>
-            </motion.div>
-          ))}
+      {showEducation && eduData.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mt-20 md:mt-24 pt-4">
+          <motion.div variants={itemVariants} className="md:col-span-1">
+            <h2 className="text-3xl font-extrabold text-white tracking-wide mb-2 uppercase">
+              Education
+            </h2>
+            <div className="w-12 h-1 bg-yellow-500 mt-2 rounded-full"></div>
+          </motion.div>
+          
+          <div className="md:col-span-2 text-gray-200">
+            {eduData.map((edu, index) => (
+              <motion.div 
+                key={index}
+                variants={itemVariants} 
+                className={`relative pb-8 pl-5 md:pl-6 ${index > 0 ? 'mt-4' : ''}`}
+              >
+                <div className="absolute left-0 top-2.5 w-2 h-2 bg-yellow-400 rounded-full"></div>
+                <h4 className="text-lg sm:text-xl font-bold text-white mb-1">{edu.institution}</h4>
+                <p className="text-sm sm:text-base text-yellow-400">
+                  {edu.degree} <span className="text-gray-400 font-normal ml-1">— {edu.year}</span>
+                </p>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ========== TESTIMONIALS ========== */}
       <TestimonialsContent testimonials={testimonialData} />

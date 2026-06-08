@@ -41,6 +41,7 @@ export default async function HomePage({ searchParams }: PageProps) {
         name,
         proficiencyLevel
       },
+      showEducation,
       education[] {
         institution,
         degree,

@@ -76,6 +76,7 @@ export interface SiteSettings {
   skills: string[];
   tools: ToolItem[];
   languages?: LanguageItem[];
+  showEducation?: boolean;
   education?: EducationItem[];
   socialLinks: SocialLink[];
   ctaTitle?: string;
