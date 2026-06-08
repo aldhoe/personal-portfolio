@@ -63,8 +63,8 @@ const LinksContent: React.FC<LinksContentProps> = ({ socialLinks, contactInfo, c
     ? contactInfo.filter(c => c.type === 'email' || c.type === 'phone')
     : fallbackContactInfo;
     
-  const finalCtaTitle = ctaTitle || "Interested in working with me?";
-  const finalCtaDesc = ctaDescription || "I'm always open to discussing product design work, partnership opportunities, or how I can help bring your vision to life.";
+  const finalCtaTitle = ctaTitle || "Looking to hire?";
+  const finalCtaDesc = ctaDescription || "I'm currently open for full-time opportunities and freelance projects. Let's discuss how my skills can bring value to your team and vision.";
 
   return (
     <motion.div 
