@@ -2,13 +2,15 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ExperienceData, ToolItem, TestimonialData } from '@/types/sanity';
+import { ExperienceData, ToolItem, TestimonialData, LanguageItem, EducationItem } from '@/types/sanity';
 import TestimonialsContent from './TestimonialsContent';
 
 interface ExperienceContentProps {
   experiences?: ExperienceData[];
   skills?: string[];
   tools?: ToolItem[];
+  languages?: LanguageItem[];
+  education?: EducationItem[];
   testimonials?: TestimonialData[];
 }
 
@@ -79,6 +81,25 @@ const fallbackTools: ToolItem[] = [
   { name: 'Midjourney', iconUrl: '/icons/midjourney.png' },
 ];
 
+const fallbackLanguages: LanguageItem[] = [
+  { name: 'English', proficiencyLevel: 'Native / Bilingual' },
+  { name: 'Spanish', proficiencyLevel: 'Fluent' },
+  { name: 'French', proficiencyLevel: 'Conversational' },
+];
+
+const fallbackEducation: EducationItem[] = [
+  {
+    institution: 'Savannah College of Art and Design (SCAD)',
+    degree: 'Bachelor of Fine Arts in User Experience Design',
+    year: '2016'
+  },
+  {
+    institution: 'Google UX Design Certificate',
+    degree: 'Professional Certificate',
+    year: 'August 2022'
+  }
+];
+
 const fallbackTestimonials: TestimonialData[] = [
   {
     name: 'Sarah Mitchell',
@@ -107,11 +128,15 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
   experiences,
   skills,
   tools,
+  languages,
+  education,
   testimonials,
 }) => {
   const expData = experiences && experiences.length > 0 ? experiences : fallbackExperiences;
   const skillData = skills && skills.length > 0 ? skills : fallbackSkills;
   const toolData = tools && tools.length > 0 ? tools : fallbackTools;
+  const languageData = languages && languages.length > 0 ? languages : fallbackLanguages;
+  const eduData = education && education.length > 0 ? education : fallbackEducation;
   const testimonialData = testimonials && testimonials.length > 0 ? testimonials : fallbackTestimonials;
 
 
@@ -241,6 +266,59 @@ const ExperienceContent: React.FC<ExperienceContentProps> = ({
               })}
             </div>
           </motion.div>
+        </div>
+      </div>
+
+      {/* ========== LANGUAGES ========== */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mt-20 md:mt-24 pt-10 border-t border-gray-800/50">
+        <motion.div variants={itemVariants} className="md:col-span-1">
+          <h2 className="text-3xl font-extrabold text-white tracking-wide mb-2 uppercase">
+            Languages
+          </h2>
+          <div className="w-12 h-1 bg-yellow-500 mt-2 rounded-full"></div>
+        </motion.div>
+        
+        <div className="md:col-span-2">
+          <div className="grid grid-cols-1 gap-4">
+            {languageData.map((lang, index) => (
+              <motion.div 
+                key={index}
+                variants={itemVariants}
+                className="flex justify-between items-center border-b border-gray-800/50 pb-4"
+              >
+                <span className="text-xl font-bold text-white">{lang.name}</span>
+                <span className="px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 rounded-full">
+                  {lang.proficiencyLevel}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ========== EDUCATION & CERTIFICATES ========== */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mt-20 md:mt-24 pt-10 border-t border-gray-800/50">
+        <motion.div variants={itemVariants} className="md:col-span-1">
+          <h2 className="text-3xl font-extrabold text-white tracking-wide mb-2 uppercase">
+            Education
+          </h2>
+          <div className="w-12 h-1 bg-yellow-500 mt-2 rounded-full"></div>
+        </motion.div>
+        
+        <div className="md:col-span-2 text-gray-200">
+          {eduData.map((edu, index) => (
+            <motion.div 
+              key={index}
+              variants={itemVariants} 
+              className={`relative pb-10 border-l border-gray-700 pl-4 md:pl-6 ${index > 0 ? 'mt-4' : ''}`}
+            >
+              <div className="absolute -left-1.5 top-2 w-3 h-3 bg-yellow-400 rounded-full"></div>
+              <h4 className="text-xl sm:text-2xl font-bold text-white mb-1.5">{edu.institution}</h4>
+              <p className="text-base text-yellow-400">
+                {edu.degree} <span className="text-gray-400 font-normal ml-2">— {edu.year}</span>
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
 

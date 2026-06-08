@@ -37,6 +37,15 @@ export default async function HomePage({ searchParams }: PageProps) {
         iconUrl,
         "sanityIcon": icon.asset->url
       },
+      languages[] {
+        name,
+        proficiencyLevel
+      },
+      education[] {
+        institution,
+        degree,
+        year
+      },
       socialLinks[] {
         name,
         iconUrl,

@@ -160,6 +160,8 @@ const ContentContainer: React.FC<ContentContainerProps> = ({
             experiences={experiences}
             skills={siteSettings?.skills}
             tools={siteSettings?.tools}
+            languages={siteSettings?.languages}
+            education={siteSettings?.education}
             testimonials={testimonials}
           />
         );

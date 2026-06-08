@@ -45,6 +45,17 @@ export interface ToolItem {
   sanityIcon?: string;     // Sanity-hosted icon URL
 }
 
+export interface LanguageItem {
+  name: string;
+  proficiencyLevel: string;
+}
+
+export interface EducationItem {
+  institution: string;
+  degree: string;
+  year: string;
+}
+
 export interface SocialLink {
   name: string;
   iconUrl?: string;        // External URL
@@ -64,6 +75,8 @@ export interface SiteSettings {
   summaryQuote: string;
   skills: string[];
   tools: ToolItem[];
+  languages?: LanguageItem[];
+  education?: EducationItem[];
   socialLinks: SocialLink[];
   ctaTitle?: string;
   ctaDescription?: string;
