@@ -111,9 +111,7 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
     if (data.length === 0 || isPaused) return;
     
     const interval = setInterval(() => {
-      // Only auto-scroll on mobile views (less than 768px wide)
-      if (window.innerWidth >= 768) return;
-
+      // Auto-scroll on all devices
       const containers = scrollContainerRefs.current;
       containers.forEach((container, index) => {
         if (!container) return;
@@ -260,6 +258,12 @@ const PortfolioContent: React.FC<PortfolioContentProps> = ({ onCardClick, data, 
                   <ChevronRight className="w-6 h-6" />
                 </button>
               )}
+
+              {/* Gradient Mask Effect for Visual Cue */}
+              <div 
+                className="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none transition-opacity duration-500"
+                style={{ opacity: scrollStates[categoryIndex]?.canScrollRight ? 1 : 0 }}
+              />
 
               <div 
                 ref={(el) => { scrollContainerRefs.current[categoryIndex] = el; }}

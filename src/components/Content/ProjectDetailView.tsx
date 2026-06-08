@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Play, Wrench, ZoomIn } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Play, Wrench, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ProjectData } from '@/types/sanity';
 import ImageLightbox from '@/components/ui/ImageLightbox';
 import { PortableText } from '@portabletext/react';
@@ -84,6 +84,22 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose, onP
     setLightboxOpen(true);
   };
   
+  // Keyboard navigation for gallery
+  useEffect(() => {
+    if (!hasMultipleMedia || lightboxOpen) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        setActiveMediaIndex(prev => (prev > 0 ? prev - 1 : prev));
+      } else if (e.key === 'ArrowRight') {
+        setActiveMediaIndex(prev => (prev < mediaItems.length - 1 ? prev + 1 : prev));
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hasMultipleMedia, lightboxOpen, mediaItems.length]);
+  
   // Get random projects (excluding the current one)
   const relatedProjects = useMemo(() => {
     if (!portfolioData) return [];
@@ -132,19 +148,44 @@ const ProjectDetailView: React.FC<ProjectDetailProps> = ({ project, onClose, onP
           ) : activeMedia?.src ? (
             /* Clickable image with zoom hint */
             <div 
-              className="relative flex items-center justify-center cursor-zoom-in group/zoom h-[40vh] md:h-[60vh] w-full"
-              onClick={handleImageClick}
+              className="relative flex items-center justify-center h-[40vh] md:h-[60vh] w-full group/media"
             >
-              <Image 
-                src={activeMedia.src} 
-                alt={activeMedia.caption || project.title} 
-                fill
-                sizes="(max-width: 1024px) 100vw, 1024px"
-                className="object-contain transition-transform duration-300 group-hover/zoom:scale-[1.02]"
-              />
+              <div 
+                className="absolute inset-0 cursor-zoom-in"
+                onClick={handleImageClick}
+              >
+                <Image 
+                  src={activeMedia.src} 
+                  alt={activeMedia.caption || project.title} 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 1024px"
+                  className="object-contain transition-transform duration-300 hover:scale-[1.02]"
+                />
+              </div>
+
+              {/* Navigation Arrows */}
+              {hasMultipleMedia && activeMediaIndex > 0 && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); setActiveMediaIndex(activeMediaIndex - 1); }}
+                  className="absolute left-4 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 flex items-center justify-center text-white/70 hover:text-white transition-all opacity-0 group-hover/media:opacity-100 backdrop-blur-sm shadow-lg"
+                  aria-label="Previous Media"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+              )}
+              {hasMultipleMedia && activeMediaIndex < mediaItems.length - 1 && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); setActiveMediaIndex(activeMediaIndex + 1); }}
+                  className="absolute right-4 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 flex items-center justify-center text-white/70 hover:text-white transition-all opacity-0 group-hover/media:opacity-100 backdrop-blur-sm shadow-lg"
+                  aria-label="Next Media"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              )}
+
               {/* Zoom indicator — appears on hover */}
               <div className="absolute inset-0 flex items-center justify-center 
-                              opacity-0 group-hover/zoom:opacity-100 transition-opacity duration-300 pointer-events-none">
+                              opacity-0 group-hover/media:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <div className="bg-black/50 backdrop-blur-sm rounded-full p-3 shadow-lg">
                   <ZoomIn className="w-6 h-6 text-white" />
                 </div>
